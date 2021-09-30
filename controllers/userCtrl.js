@@ -44,6 +44,40 @@ const userCtrl = {
             return res.status(500).json({msg: err.message})
         }
     },
+    login: async (req, res) => {
+        try {
+            const {email, password} = req.body;
+            const user = await Users.findOne({email})
+            if(!user) return res.status(400).json({msg: 'User does not exists.'})
+
+            const isMatch = await bcrypt.compare(password, user.password)
+            if(!isMatch) return res.status(400).json({msg: 'Incorrect Password.'})
+
+            // If login success, create access token & refresh token
+            const accesstoken = createAccessToken({id: user._id})
+            const refreshtoken = createRefreshToken({id: user._id})
+
+            // save a cookie in this particular path
+            res.cookie('refreshtoken', refreshtoken, {
+                httpOnly: true,
+                path: '/user/refresh_token'
+            })
+
+            // send access token
+            res.json(accesstoken)
+
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+    logout: async (req, res) => {
+        try {
+            res.clearCookie('refreshtoken', {path: '/user/refresh_token'})
+            return res.json({msg: "Logged Out"})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
     refreshtoken: (req, res) => {
         try {
             // check cookie from '/user/refresh_token' path 
@@ -52,8 +86,8 @@ const userCtrl = {
 
             jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
                 if(err) return res.status(400).json({msg: "Please Login or Register."})
-                const accesstoken = createAccessToken({id: user._id})
-
+                const accesstoken = createAccessToken({id: user.id})
+                
                 // send access token
                 res.json({accesstoken})
             })
@@ -61,8 +95,17 @@ const userCtrl = {
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
-    }
+    },
+    getUser: async (req, res) => {
+        try {
+            const user = await Users.findById(req.user.id).select('-password')
 
+            if(!user) return res.status(400).json({msg: "User does not exist."})
+            res.json(user)
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    }
 }
 
 const createAccessToken = (user) => {
