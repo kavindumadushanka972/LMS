@@ -74,7 +74,7 @@ router.post('/uploadvideo',auth, authTeacher, (req, res) => {
         }
             
 
-        cloudinary.v2.uploader.upload(file.tempFilePath, {folder: "LMS", resource_type: "video", chunk_size: 6000000}, (err, result) => {
+        cloudinary.v2.uploader.upload(file.tempFilePath, {folder: "LMS", resource_type: "video", chunk_size: 6000000}, async(err, result) => {
             if(err) throw err;
             removeTmp(file.tempFilePath)
             res.json({public_id: result.public_id, url: result.secure_url})
