@@ -66,7 +66,8 @@ const courseCtrl = {
     },
     createCourse: async(req, res) => { // only teacher can
         try {
-            const {title, description, owner_id, image_public_id, image_url, category} = req.body
+            const owner_id = req.user.id
+            const {title, description, image_public_id, image_url, category} = req.body
 
             if(!image_url) return res.status(500).json({msg: "You must upload an image."})
 
@@ -91,12 +92,12 @@ const courseCtrl = {
     },
     updateCourse: async(req, res) => { // only teacher can
         try {
-            const {title, description, owner_id, image_public_id, image_url, category} = req.body
+            const {title, description, image_public_id, image_url, category} = req.body
 
             if(!image_url) return res.status(500).json({msg: "You must upload an image."})
 
             await Courses.findOneAndUpdate({_id: req.params.id}, {
-                title: title.toLowerCase(), description, owner_id, image_public_id, image_url, category
+                title: title.toLowerCase(), description, image_public_id, image_url, category
             })
 
             res.json({msg: "Updated the course"})
