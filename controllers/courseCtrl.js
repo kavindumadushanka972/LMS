@@ -105,7 +105,7 @@ const courseCtrl = {
             return res.status(500).json({msg: err.message})
         }
     },
-    getCourse: async(req, res) => { // anyone can
+    getCourse: async(req, res) => { // anyone can get course details by course id
         try {
             const course = await Courses.findById(req.params.id)
 

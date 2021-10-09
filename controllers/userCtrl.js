@@ -105,6 +105,20 @@ const userCtrl = {
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
+    },
+    enroll: async (req, res) => {
+        try {
+            const user = await Users.findById(req.user.id)
+            if(!user) return res.status(500).json({msg: "User does not exists."})
+
+            await Users.findByIdAndUpdate({_id: req.user.id}, {
+                courses: req.body.course
+            })
+
+            res.json({msg: "Enrolled"})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
     }
 }
 
