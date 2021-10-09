@@ -17,7 +17,7 @@ const categoryCtrl = {
             const category = await Category.findOne({name})
             if(category) return res.status(400).json({msg: "This category already exists."})
 
-            const newCategory = new Category({name})
+            const newCategory = new Category({name: name.toLowerCase()})
             await newCategory.save()
 
             res.json({msg: "Created a category"})

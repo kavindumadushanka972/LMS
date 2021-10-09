@@ -3,6 +3,7 @@ const categoryCtrl = require('../controllers/categoryCtrl')
 const auth = require('../middleware/auth')
 const authAdmin = require('../middleware/authAdmin')
 
+// only Admin can use these routes
 router.route('/category')
     .get(categoryCtrl.getCategories)
     .post(auth, authAdmin, categoryCtrl.createCategory)
