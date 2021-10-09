@@ -16,4 +16,8 @@ router.route('/courses/:id')
 router.route('/mycourses/:teacer_id')
     .get(auth, authTeacher, courseCtrl.getMyCourses) // only teacher can see his/her own courses
 
+router.route('/courses_length')
+    .get(courseCtrl.getCourselength) // anyone can see number of courses
+    
+
 module.exports = router
