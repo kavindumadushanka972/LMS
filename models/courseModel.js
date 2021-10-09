@@ -16,6 +16,10 @@ const courseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    owner_name: {
+        type: String,
+        required: true
+    },
     image_public_id: {
         type: String,
         required: true

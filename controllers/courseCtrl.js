@@ -1,4 +1,5 @@
 const Courses = require('../models/courseModel');
+const Users = require('../models/userModel')
 
 // filter, sorting and paginating
 
@@ -71,8 +72,10 @@ const courseCtrl = {
 
             if(!image_url) return res.status(500).json({msg: "You must upload an image."})
 
+            const owner = await Users.findById(owner_id)
+            console.log(owner)
             const newCourse = new Courses({
-                title: title.toLowerCase(), description, owner_id, image_public_id, image_url, category
+                title: title.toLowerCase(), description, owner_id, owner_name: owner.name, image_public_id, image_url, category
             })
 
             await newCourse.save()
