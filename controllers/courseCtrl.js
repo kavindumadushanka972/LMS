@@ -119,7 +119,7 @@ const courseCtrl = {
     },
     getMyCourses: async(req, res) => { // anyone can
         try {
-            const courses = await Courses.find({owner_id: req.params.teacer_id})
+            const courses = await Courses.find({owner_id: req.params.teacher_id})
             res.json(courses)
         } catch (err) {
             return res.status(500).json({msg: err.message})

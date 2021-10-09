@@ -13,7 +13,7 @@ router.route('/courses/:id')
     .delete(auth, authAdminTeacher, courseCtrl.deleteCourse) // teacher or admin can delete a course
     .put(auth, authTeacher, courseCtrl.updateCourse) // only teacher can update a course
 
-router.route('/mycourses/:teacer_id')
+router.route('/mycourses/:teacher_id')
     .get(auth, authTeacher, courseCtrl.getMyCourses) // only teacher can see his/her own courses
 
 router.route('/courses_length')
