@@ -46,15 +46,16 @@ export default {
 <style scoped>
 #nav {
   padding: 30px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
 }
 
+
+
 #nav a {
-  font-weight: light;
   color: #2c3e50;
   text-decoration: none;
 }
-
-
 
 #nav a.router-link-exact-active {
   color: #42b983;

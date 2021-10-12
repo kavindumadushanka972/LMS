@@ -2,17 +2,42 @@
   <div>
     <section id=top-section>
       <div class="header-line container-fluid">
-        <h1>Thirsty For Learing? </h1>
+        <h1>Thirsty For Learning? </h1>
         <h4>We offer best online video courses for you. </h4>
         <button class="btn btn-dark" @click="$router.push('/register')">Get Started</button>
         <p>Already have an account? <router-link to="/login">login</router-link></p>
       </div>
     </section>
-    <section id="featured-section">
-      <h2>Featured Courses for you</h2>
+
+    <section id="features-section">
+      <h2 class="section-header">Why us?</h2>
+      <div class="row">
+      <div class="feature col-lg-4">
+         <i class="fas fa-chalkboard-teacher"></i>
+        <h4>Best Teachers</h4>
+        <p>All of our teachers are the best</p>
+      </div>
+       <div class="feature col-lg-4">
+         <i class="fas fa-laptop-house"></i>
+        <h4>Latest teaching methods</h4>
+        <p>All of our teachers are the best</p>
+      </div>
+       <div class="feature col-lg-4">
+         <i class="fas fa-chalkboard-teacher"></i>
+
+        <h4>Best Teachers</h4>
+        <p>All of our teachers are the best</p>
+      </div>
+      </div>
+    </section>
+    <section id="course-section">
+      <h2 class="section-header">Featured Courses for you</h2>
       <div class="row">
        <Course :key="course.title" v-for="course in featuredCourses" :course="course"/>
       </div>
+    </section>
+    <section id="testimonial-section">
+      
     </section>
   </div>
 </template>
@@ -49,8 +74,7 @@ export default {
             }
         
             const data = await res.json()
-            console.log(data.courses)
-            return data.courses.slice(0, 3)
+            return data.courses.slice(0, 4)
         }
     }
 }
@@ -62,19 +86,38 @@ export default {
   height: 90vh;
   padding-top: 40px;
 }
-h1, h2 {
-  font-family: 'Montserrat', sans-serif;
-}
 h2 {
-  text-align: left;
   font-weight: 600;
-  margin-bottom: 10px;
+}
+.section-header {
+  text-align: left;
+  font-weight: 400;
+  margin-bottom: 70px;
 }
 .header-line {
   text-align: center;
   padding: 2rem;
 }
-#featured-section {
+#course-section, #features-section {
   padding: 30px;
+  text-align: center;
+}
+#features-section {
+  min-height: 50vh;
+}
+#testimonial-section {
+  background-color: #A0E7E5 ;
+  height: 5rem;
+  padding-top: 2rem;
+}
+.feature {
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}
+.fas {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 </style>

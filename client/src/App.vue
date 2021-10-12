@@ -23,10 +23,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
-h1 {
+h1, h2, h3, h4 {
   font-weight: 600;
 }
 
