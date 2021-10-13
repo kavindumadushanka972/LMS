@@ -40,8 +40,10 @@ export default {
     padding-left: 10%;
     padding-right: 10%;
     text-align: left;
+    padding-bottom: 60px;
 }
 h1 {
+    margin-top: 30px;
     margin-bottom: 40px;
 }
 .main-img {

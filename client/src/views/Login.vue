@@ -1,23 +1,69 @@
 <template>
      <div class="container">
-     <form class="form-signin">
+     <form class="form-signin" @submit.prevent="submit">
       <h1>i<span class="ilearn-l">L</span>earn</h1>
       <!-- <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" v-model="email" required autofocus>
       <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" v-model="password" required>
       <div class="checkbox mb-3">
         <label>
           <input type="checkbox" value="remember-me"> Remember me
         </label>
       </div>
+      <p v-if="incorrectPassword">{{ errorMsg }}</p>
       <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
       <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
     </form>
      </div>
 </template>
+
+<script>
+
+export default {
+  name: 'Login',
+  data() {
+    return {
+      email: '',
+      password: '',
+      incorrectPassword: false,
+      errorMsg: ''
+    }
+  },
+  methods: {
+    async submit() {
+      try {
+        const res = await fetch('http://localhost:5000/user/login', {
+          method: "POST",
+          mode: 'cors',
+          headers: {'Content-Type': 'application/json'},
+          credentials: 'include',
+          body: JSON.stringify({email: this.email, password: this.password})
+        })
+        const data = await res.json()
+        console.log(data)
+
+        if (res.status !== 200) {
+          this.incorrectPassword = true
+          this.errorMsg = data.msg
+          return
+        }
+       
+       
+        // this.$store.commit('setAuth', data)
+        localStorage.auth = data
+        this.$router.push('/')
+
+      } catch(err) {
+         this.incorrectPassword = true
+        this.errorMsg = err
+      }
+    }
+  }
+}
+</script>
 
 <style scoped>
 

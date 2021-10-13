@@ -9,12 +9,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-                <router-link to="/" class="nav-link">Home</router-link>
+                <router-link to="/" class="nav-link">HOME</router-link>
             </li>
            
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Courses
+                COURSES
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Tech & programming</a>
@@ -24,7 +24,8 @@
                 </div>
             </li>
             <li class="nav-item">
-                <router-link class="nav-link" to="/login">Login</router-link>
+                <a v-if="loggedin" class="nav-link" @click="logout" >LOGOUT</a>
+                <router-link v-else class="nav-link" to="/login">LOGIN</router-link>
             </li>
             </ul>
             <!-- <form class="form-inline my-2 my-lg-0">
@@ -39,7 +40,52 @@
 <script>
 
 export default {
-    name: 'Header'
+    name: 'Header',
+    data() {
+        return {
+            loggedin: typeof localStorage.auth !== 'undefined'
+        }
+    },
+    created() {
+        
+        // this.loggedin = localStorage.getItem('auth') === 'undefined' ? false : true
+     
+        console.log("created " + typeof localStorage.auth)
+
+    },
+    methods: {
+        async logout() {
+             try {
+                const res = await fetch('http://localhost:5000/user/logout', {
+                    method: "POST",
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('auth')},
+                    credentials: 'include',
+                    body: ''
+                })
+                const data = await res.json()
+                console.log(data)
+
+                if (res.status !== 200) {
+                    return
+                }
+            
+            
+                // this.$store.commit('setAuth', data)
+                localStorage.removeItem('auth')
+
+                this.$router.push('/')
+
+            } catch(err) {
+                this.incorrectPassword = true
+                this.errorMsg = err
+            }
+        }  
+    }
+    
+    
 }
 </script>
 
@@ -50,7 +96,9 @@ export default {
   font-weight: 400;
 }
 
-
+.navbar-nav a {
+  font-size: 0.9rem;
+}
 
 #nav a {
   color: #2c3e50;

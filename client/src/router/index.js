@@ -4,6 +4,7 @@ import Login from '../views/Login'
 import Courses from '../views/Courses'
 import Register from '../views/Register'
 import CoursePage from '../views/CoursePage'
+import Dashboard from '../views/Dashboard'
 
 
 const routes = [
@@ -39,6 +40,11 @@ const routes = [
     path: '/course/:id',
     name: 'CoursePange',
     component: CoursePage
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard
   }
 ]
 

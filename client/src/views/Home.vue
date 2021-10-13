@@ -23,9 +23,9 @@
         <p>All of our teachers are the best</p>
       </div>
        <div class="feature col-lg-4">
-         <i class="fas fa-chalkboard-teacher"></i>
+         <i class="fas fa-industry"></i>
 
-        <h4>Best Teachers</h4>
+        <h4>Industry approved content</h4>
         <p>All of our teachers are the best</p>
       </div>
       </div>
@@ -60,6 +60,21 @@ export default {
   },
   async created() {
     this.featuredCourses = await this.fetchFeaturedCourses()
+
+    const res = await fetch('http://localhost:5000/user/infor', {
+        method: "GET",
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: localStorage.getItem('auth')
+        },
+        credentials: 'include',
+    })
+
+    const data = await res.json()
+    console.log(data)
+      // console.log('auth: ' + this.$store.getters.authToken)
+      console.log('auth: ' + localStorage.auth)
   },
   methods: {
         async fetchFeaturedCourses() {
@@ -93,6 +108,7 @@ h2 {
   text-align: left;
   font-weight: 400;
   margin-bottom: 70px;
+  line-height: 2rem;
 }
 .header-line {
   text-align: center;
