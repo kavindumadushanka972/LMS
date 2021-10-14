@@ -24,7 +24,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a v-if="loggedin" class="nav-link" @click="logout" >LOGOUT</a>
+                <a v-if="user" class="nav-link" @click="logout" >LOGOUT</a>
                 <router-link v-else class="nav-link" to="/login">LOGIN</router-link>
             </li>
             </ul>
@@ -38,19 +38,20 @@
 </template>
 
 <script>
+import {mapGetters, mapState, mapMutations} from 'vuex'
 
 export default {
     name: 'Header',
     data() {
         return {
-            loggedin: typeof localStorage.auth !== 'undefined'
+            
         }
     },
-    created() {
+    mounted() {
         
         // this.loggedin = localStorage.getItem('auth') === 'undefined' ? false : true
      
-        console.log("created " + typeof localStorage.auth)
+        console.log("created " + this.authenticated)
 
     },
     methods: {
@@ -66,23 +67,27 @@ export default {
                     body: ''
                 })
                 const data = await res.json()
-                console.log(data)
+                console.log(data, res.status)
 
-                if (res.status !== 200) {
-                    return
-                }
+                // if (res.status !== 200) {
+                //     return
+                // }
             
+                console.log('logint out: ' + this.user)
             
                 // this.$store.commit('setAuth', data)
                 localStorage.removeItem('auth')
-
+                this.$store.commit('setUser', null)
                 this.$router.push('/')
 
             } catch(err) {
-                this.incorrectPassword = true
-                this.errorMsg = err
+                console.log(err)
             }
         }  
+    },
+    computed: {
+        ...mapGetters(['authenticated']),
+        ...mapState(['user'])
     }
     
     
@@ -115,6 +120,9 @@ export default {
 
 .navbar-toggler {
     border: none;
+}
+a {
+    cursor: pointer;
 }
 
 

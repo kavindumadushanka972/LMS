@@ -3,19 +3,52 @@ import {createStore} from 'vuex'
 
 const store = createStore({
   state: {
-    auth: null
+    user: null
   },
   mutations: {
-    setAuth(state, auth) {
-        state.auth = auth
+    setUser(state, payload) {
+      // console.log(payload)
+        state.user = payload
     }
   },
   actions: {
-      
+      async loadUser(context) {
+        if (context.state.user) {
+          return
+        }
+
+        if (!context.getters.authToken) {
+          context.commit('user', null)
+          return
+        }
+        
+        const res = await fetch('http://localhost:5000/user/infor', {
+            method: "GET",
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: context.getters.authToken
+            },
+            credentials: 'include',
+        })
+
+        const data = await res.json()
+        context.commit('setUser', data)
+        // console.log(data)
+      }
   },
   getters: {
     authToken(state) {
-      return state.auth
+      if (typeof localStorage.auth === 'undefined' || localStorage.auth == null) {
+        return null
+      }
+      return localStorage.auth
+    },
+    getUser(state) {
+      return state.user
+    },
+    authenticated(state, getters) {
+      return getters.authToken !== null
     }
   }
 })

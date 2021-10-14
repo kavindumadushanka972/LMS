@@ -54,7 +54,7 @@ export default {
        
         // this.$store.commit('setAuth', data)
         localStorage.auth = data
-        this.$router.push('/')
+        this.$router.push('/dashboard')
 
       } catch(err) {
          this.incorrectPassword = true

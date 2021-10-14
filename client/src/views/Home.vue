@@ -44,14 +44,16 @@
 
 <script>
 // @ is an alias to /src
-// import Header from '../components/Header'
+import Header from '../components/Header'
 import Course from '../components/Course'
+import {mapState, mapGetters} from 'vuex'
 
 
 export default {
   name: 'Home',
   components: {
-    Course
+    Course,
+    Header
   },
   data() {
     return {
@@ -59,22 +61,16 @@ export default {
     }
   },
   async created() {
+    console.log('home')
     this.featuredCourses = await this.fetchFeaturedCourses()
+    //   console.log('user: ' + this.user)
 
-    const res = await fetch('http://localhost:5000/user/infor', {
-        method: "GET",
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: localStorage.getItem('auth')
-        },
-        credentials: 'include',
-    })
-
-    const data = await res.json()
-    console.log(data)
-      // console.log('auth: ' + this.$store.getters.authToken)
-      console.log('auth: ' + localStorage.auth)
+    // await this.$store.dispatch('loadUser')
+    //   // console.log('auth: ' + this.$store.getters.authToken)
+    //   console.log(': ' + this.$store.getters.authenticated)
+    if (this.user) {
+      this.$router.push('/dashboard')
+    }
   },
   methods: {
         async fetchFeaturedCourses() {
@@ -91,6 +87,10 @@ export default {
             const data = await res.json()
             return data.courses.slice(0, 4)
         }
+    },
+    computed: {
+      ...mapState(['user']),
+      ...mapGetters(['authenticated'])
     }
 }
 </script>
@@ -100,6 +100,7 @@ export default {
   background-color: #A0E7E5;
   height: 90vh;
   padding-top: 40px;
+  min-height: 30rem;
 }
 h2 {
   font-weight: 600;
