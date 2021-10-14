@@ -20,9 +20,13 @@
                 </div>
                 <div v-if="user.role==2">
                      <h3>Courses by You</h3>
+                     <div class="options">
+                        <button class="btn btn-info" @click="$router.push('/course-editor')"><b>+</b> New</button>
+                     </div>
                     <div class="row courses">
                         <Course :key="course.id" v-for="course in courses" :course="course" :mode="'teacher'"/>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -123,6 +127,7 @@ export default {
     background-color: rgb(247, 216, 216);
 }
 .main-col {
+    padding: 20px;
     padding-top: 40px;
 }
 .profile-pic {
@@ -133,5 +138,9 @@ export default {
 }
 .courses {
     justify-content: left;
+}
+.options {
+    text-align: right;
+    padding-right: 20px;
 }
 </style>

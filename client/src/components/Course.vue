@@ -4,13 +4,13 @@
         <h4 @click="$router.push(`/course/${course._id}`)">{{ course.title }}</h4>
         <p>by {{ course.owner_name }}</p>
         <div v-if="mode === 'teacher'">
-            <button class="btn btn-outline-dark">Edit</button>
-            <button class="btn btn-danger">Delete</button>
+            <button class="btn btn-outline-dark" @click="$router.push(`/course-editor/${course._id}`)">Edit</button>
+            <button class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
 
         </div>
-        <div v-else-if="mode === 'student'">
+        <!-- <div v-else-if="mode === 'student'">
             <button class="btn btn-outline-dark">Unenroll</button>
-        </div>
+        </div> -->
             
     </div>
 </template>
@@ -44,7 +44,11 @@ img {
     cursor: pointer;
 }
 .btn {
-    font-size: 0.7rem;
-    margin-right: 15px;
+    font-size: 0.9rem;
+    margin-right: 10px;
+    padding: 5px 10px;
+}
+p {
+    margin-bottom: 5px;
 }
 </style>

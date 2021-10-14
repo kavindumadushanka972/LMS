@@ -3,7 +3,8 @@ import {createStore} from 'vuex'
 
 const store = createStore({
   state: {
-    user: null
+    user: null,
+    courses: []
   },
   mutations: {
     setUser(state, payload) {
@@ -12,6 +13,12 @@ const store = createStore({
     },
     setCourseList(state, payload) {
       state.user.courses = payload
+    },
+    insertCourse(state, payload) {
+      state.courses.push(payload)
+    },
+    clearCourses(state) {
+      state.courses = []
     }
   },
   actions: {
@@ -40,6 +47,7 @@ const store = createStore({
         // console.log(data)
       },
       async updateCourseList(context, payload) {
+          context.commit('clearCourses')
           const res = await fetch('http://localhost:5000/user/enroll', {
               method: "PATCH",
               mode: 'cors',
@@ -57,7 +65,20 @@ const store = createStore({
           } else {
             throw 'could not enroll'
           }
-      }
+      },
+      async fetchCourses(context, payload) {  // get courses for given id list
+        for (let id of payload) {
+          
+          const res = await fetch(`http://localhost:5000/api/courses/${id}`)
+          const data = await res.json()
+          if (res.status != 200) {
+              console.log(data.msg)
+              return
+          }
+          context.commit('insertCourse', data)
+        }
+        console.log(context.state.courses)
+    },
   },
   getters: {
     authToken(state) {

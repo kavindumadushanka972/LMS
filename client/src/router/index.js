@@ -5,6 +5,7 @@ import Courses from '../views/Courses'
 import Register from '../views/Register'
 import CoursePage from '../views/CoursePage'
 import Dashboard from '../views/Dashboard'
+import CourseEditor from '../views/CourseEditor'
 
 
 const routes = [
@@ -45,6 +46,16 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard
+  },
+  {
+    path: '/course-editor',
+    name: 'CourseCreator',
+    component: CourseEditor
+  },
+  {
+    path: '/course-editor/:id',
+    name: 'CourseEditor',
+    component: CourseEditor
   }
 ]
 
