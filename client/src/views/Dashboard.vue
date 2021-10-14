@@ -14,9 +14,15 @@
                 <div v-if="user.role==1">
                     <h3>Enrolled courses</h3>
                     <div class="row courses">
-                        <Course :key="course.id" v-for="course in courses" :course="course"/>
+                        <Course :key="course.id" v-for="course in courses" :course="course" :mode="'student'"/>
                     </div>
                     <p v-if="!courses.length">you don't have any course <router-link to="/courses">Browes courses</router-link></p>
+                </div>
+                <div v-if="user.role==2">
+                     <h3>Courses by You</h3>
+                    <div class="row courses">
+                        <Course :key="course.id" v-for="course in courses" :course="course" :mode="'teacher'"/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -42,8 +48,8 @@ export default {
         if (!this.user) {
             this.$router.push('/')
         }
-        console.log(this.user.courses)
-        this.fetchUserCourses()
+        await this.fetchUserCourses()
+        console.log('c: ' + this.user.courses[0])
     },
     computed: {
         fname() {
@@ -58,18 +64,48 @@ export default {
     },
     methods: {
         async fetchUserCourses() {
-            for (let courseID of this.user.courses) {
-                const res = await fetch(`http://localhost:5000/api/courses/${courseID}`)
-                    .catch(console.log)
-
-                const data = await res.json()
-                if (res.status != 200) {
-                    continue
-                }
-                
-                console.log(data)   
-                this.courses.push(data)
+            if (this.user.role == 1) {
+                 await this.fetchStudentCourses()
+            } else if (this.user.role == 2) {
+               await this.fetchTeacherCourses()
             }
+        },
+        async fetchStudentCourses() {
+                let courseList = this.user.courses
+                for (let courseID of courseList) {
+                    const res = await fetch(`http://localhost:5000/api/courses/${courseID}`)
+                        .catch(console.log)
+
+                    const data = await res.json()
+                    if (res.status != 200) {
+                        continue
+                    }
+                    
+                    console.log(data)   
+                    this.courses.push(data)
+                }
+        },
+        async fetchTeacherCourses() {
+            const res = await fetch(`http://localhost:5000/api/mycourses/${this.user._id}`, {
+                method: "GET",
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: this.$store.getters.authToken
+                },
+                credentials: 'include'
+            })
+            
+            const data = await res.json()
+            console.log('d ' + data)
+            if (res.status !== 200) {
+                return
+            }  
+            for (let course of data) {
+                this.courses.push(course)
+            }
+            // this.courses = data
+            console.log(this.courses[0])
         }
     }
 }
@@ -84,7 +120,7 @@ export default {
 .sidebar { 
     padding-top: 40px;
     min-height: 50rem;
-    background-color: rgb(238, 192, 192);
+    background-color: rgb(247, 216, 216);
 }
 .main-col {
     padding-top: 40px;
