@@ -11,7 +11,10 @@ export default {
     name: 'Course',
     props: {
         course: Object,
-        full: false
+        full: false,
+        mode: {
+            enum: ['teacher', 'student', 'common']
+        }
     }
 }
 </script>

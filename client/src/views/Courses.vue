@@ -2,7 +2,7 @@
     <div class="courses">
         <h1>Find Courses of Your Dreams</h1>
         <div class="row">
-            <Course :key="course.id" v-for="course in courses" :course="course"/>
+            <Course :key="course.id" v-for="course in courses" :course="course" :mode="'common'"/>
         </div>
     </div>
    
@@ -23,7 +23,10 @@ export default {
         }
     },
     async created() {
+
         this.courses = await this.fetchCourses()
+    //    console.log(localStorage.auth)
+
     },
     methods: {
         async fetchCourses() {
@@ -34,7 +37,7 @@ export default {
             }
         
             const data = await res.json()
-            console.log(data)
+            // console.log(data)
 
             return data.courses
         }

@@ -47,12 +47,8 @@ export default {
             
         }
     },
-    mounted() {
-        
-        // this.loggedin = localStorage.getItem('auth') === 'undefined' ? false : true
-     
-        console.log("created " + this.authenticated)
-
+    async mounted() {
+        await this.$store.dispatch('loadUser')
     },
     methods: {
         async logout() {
@@ -86,7 +82,7 @@ export default {
         }  
     },
     computed: {
-        ...mapGetters(['authenticated']),
+        // ...mapGetters(['authenticated']),
         ...mapState(['user'])
     }
     

@@ -61,9 +61,10 @@ export default {
     }
   },
   async created() {
+    await this.$store.dispatch('loadUser')
     console.log('home')
     this.featuredCourses = await this.fetchFeaturedCourses()
-    //   console.log('user: ' + this.user)
+      console.log('user: ' + this.user)
 
     // await this.$store.dispatch('loadUser')
     //   // console.log('auth: ' + this.$store.getters.authToken)

@@ -9,6 +9,9 @@ const store = createStore({
     setUser(state, payload) {
       // console.log(payload)
         state.user = payload
+    },
+    setCourseList(state, payload) {
+      state.user.courses = payload
     }
   },
   actions: {
@@ -18,7 +21,7 @@ const store = createStore({
         }
 
         if (!context.getters.authToken) {
-          context.commit('user', null)
+          context.commit('setUser', null)
           return
         }
         
@@ -35,6 +38,9 @@ const store = createStore({
         const data = await res.json()
         context.commit('setUser', data)
         // console.log(data)
+      },
+      updateCourseList(context, payload) {
+        
       }
   },
   getters: {
