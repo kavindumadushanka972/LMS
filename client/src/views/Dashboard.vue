@@ -63,12 +63,11 @@ export default {
                     .catch(console.log)
 
                 const data = await res.json()
-
                 if (res.status != 200) {
-                    console.log(data)
                     continue
                 }
-            
+                
+                console.log(data)   
                 this.courses.push(data)
             }
         }

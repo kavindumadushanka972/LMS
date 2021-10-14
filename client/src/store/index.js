@@ -39,8 +39,24 @@ const store = createStore({
         context.commit('setUser', data)
         // console.log(data)
       },
-      updateCourseList(context, payload) {
-        
+      async updateCourseList(context, payload) {
+          const res = await fetch('http://localhost:5000/user/enroll', {
+              method: "PATCH",
+              mode: 'cors',
+              headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: context.getters.authToken
+              },
+              credentials: 'include',
+              body: JSON.stringify({course: payload})
+          }).catch(err => {throw err})
+
+          if (res.status == 200) {
+              const data = await res.json()
+              context.commit('setCourseList', payload)
+          } else {
+            throw 'could not enroll'
+          }
       }
   },
   getters: {
@@ -54,7 +70,7 @@ const store = createStore({
       return state.user
     },
     authenticated(state, getters) {
-      return getters.authToken !== null
+      return state.user !== null
     }
   }
 })

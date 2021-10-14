@@ -2,7 +2,7 @@
     <div :class="['container', full?'col-6':'col-lg-3 col-md-4 col-sm-6']">
         <img :src="course.image_url" @click="$router.push(`/course/${course._id}`)" :alt="course.title"/>
         <h4 @click="$router.push(`/course/${course._id}`)">{{ course.title }}</h4>
-        <p>{{ course.description }}</p>
+        <p>by {{ course.owner_name }}</p>
     </div>
 </template>
 
@@ -29,6 +29,7 @@ h4 {
     font-weight: 600;
     margin-bottom: 2px;
     cursor: pointer;
+    font-size: 1.2rem;
 }
 img {
     width:inherit;

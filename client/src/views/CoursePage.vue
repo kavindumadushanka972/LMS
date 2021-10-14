@@ -1,6 +1,7 @@
 <template>
-    <div class="container">
+    <div class="container" v-if="course">
         <h1>{{ course.title }}</h1>
+        <h5>by {{ course.owner_name }}</h5>
         <img class="main-img" :src="course.image_url" :alt="course.title"/>
         <p>{{ course.description }}</p>
         <div v-if="user">
@@ -26,7 +27,7 @@ export default {
     name: 'CoursePage',
     data() {
         return {
-            course: {title: ''},
+            course: null,
             enrolled: false
         }
     },
@@ -50,23 +51,9 @@ export default {
         async enroll() {
             const newCourseList = Object.values(this.user.courses)
             newCourseList.push(this.course._id)
-            const res = await fetch('http://localhost:5000/user/enroll', {
-                method: "PATCH",
-                mode: 'cors',
-                headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.$store.getters.authToken
-            },
-                credentials: 'include',
-                body: JSON.stringify({course: newCourseList})
-            })
-
-            if (res.status == 200) {
-                const data = await res.json()
-                console.log(data)
-                this.$store.commit('setCourseList', newCourseList)
-                this.enrolled = true
-            }
+            this.$store.dispatch('updateCourseList', newCourseList)
+            .then(() => this.enrolled = true)
+            .catch(console.log)
         },
         alreadyEnrolled() {
             return Object.values(this.user.courses).indexOf(this.course._id) > -1
@@ -88,10 +75,11 @@ export default {
 }
 h1 {
     margin-top: 30px;
-    margin-bottom: 40px;
+    margin-bottom: 5px;
 }
 .main-img {
     width: 100%;
+    margin-top: 40px;
 }
 p {
     margin-top: 50px;
