@@ -13,7 +13,7 @@ const store = createStore({
       // console.log(payload)
         state.user = payload
     },
-    setCourseList(state, payload) {
+    setUserCourseList(state, payload) {
       state.user.courses = payload
     },
     insertCourse(state, payload) {
@@ -28,6 +28,13 @@ const store = createStore({
     setVideos(state, payload) {
       console.log('setvid: ' + payload)
       state.videos = payload
+    },
+    setCourseList(state, payload) {
+      state.courses = payload
+    },
+    removeCourse(state, payload) {
+      state.courses = state.courses.filter((elem) => elem._id !== payload)
+      console.log('removing ' +  state.courses.indexOf(payload))
     }
   },
   actions: {
@@ -69,7 +76,7 @@ const store = createStore({
 
           if (res.status == 200) {
               const data = await res.json()
-              context.commit('setCourseList', payload)
+              context.commit('setUserCourseList', payload)
           } else {
             throw 'could not enroll'
           }
@@ -120,6 +127,7 @@ const store = createStore({
         })
         if (res.status == 200) {
           const data = await res.json()
+          context.commit('removeCourse', payload)
           console.log(data)
         } else {
           throw 'could not delete course'

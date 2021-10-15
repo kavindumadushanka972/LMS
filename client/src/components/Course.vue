@@ -27,6 +27,9 @@ export default {
     },
     methods: {
         deleteCourse() {
+             if (!confirm('Are you sure want to delete this course?')) {
+                return
+            }
             this.$store.dispatch('deleteCourse', this.course._id)
             this.$router.push('/')
         }

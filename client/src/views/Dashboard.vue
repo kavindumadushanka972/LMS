@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
 import Course from '../components/Course'
 
 export default {
@@ -44,7 +44,7 @@ export default {
     },
     data() {
         return {
-            courses: []
+            // courses: []
         }
     },
     async mounted() {
@@ -63,7 +63,7 @@ export default {
             const roles = ['Student', 'Teacher', 'Admin']
             return roles[this.user.role - 1]
         },
-        ...mapState(['user']),
+        ...mapState(['user', 'courses']),
         ...mapGetters(['authenticated'])
     },
     methods: {
@@ -76,6 +76,7 @@ export default {
         },
         async fetchStudentCourses() {
                 let courseList = this.user.courses
+                this.clearCourses()
                 for (let courseID of courseList) {
                     const res = await fetch(`http://localhost:5000/api/courses/${courseID}`)
                         .catch(console.log)
@@ -86,7 +87,8 @@ export default {
                     }
                     
                     console.log(data)   
-                    this.courses.push(data)
+                    this.insertCourse(data)
+                    // this.courses.push(data)
                 }
         },
         async fetchTeacherCourses() {
@@ -105,12 +107,15 @@ export default {
             if (res.status !== 200) {
                 return
             }  
-            for (let course of data) {
-                this.courses.push(course)
-            }
+            this.setCourseList(data)
+            // for (let course of data) {
+            //     this.courses.push(course)
+            // }
+            console.log('5 ' + this.$store.state.courses)
             // this.courses = data
             console.log(this.courses[0])
-        }
+        },
+        ...mapMutations(['setCourseList', 'clearCourses', 'insertCourse'])
     }
 }
 </script>

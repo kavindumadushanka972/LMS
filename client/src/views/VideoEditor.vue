@@ -17,7 +17,7 @@
             <input type="text" class="form-control" placeholder="" v-model="video.link" required>
         </div>
 
-        <div class="preview section">
+        <div v-if="video.link !== ''" class="preview section">
            <Video :video="video"/>
         </div>
        

@@ -1,6 +1,6 @@
 <template>
     <div class="video col-12">
-        <iframe :src="video.link"></iframe>
+        <iframe height="370" width="420" :src="video.link"></iframe>
         <div class="text">
             <h3>{{ video.title }}</h3>
             <p>{{ video.description }}</p>
@@ -25,7 +25,7 @@ export default {
 }
 iframe {
     width: 100%;
-    height: 20rem;
+    /* height: 20rem; */
 }
 .text {
     text-align: left;

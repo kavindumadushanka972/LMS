@@ -26,7 +26,9 @@
           <select v-model="course.category" class="form-control" aria-label="Seletect category">
             <option selected value="maths">Math</option>
             <option value="english">Programming</option>
+            <option value="multimedia">Multimedia</option>
             <option value="programming">English</option>
+            <option value="other">Other</option>
           </select>
         </div>
        

@@ -1,9 +1,10 @@
 <template>
-    <div class="container" v-if="course">
+    <div class="container col-lg-7" v-if="course">
         <h1>{{ course.title }}</h1>
         <h5>by {{ course.owner_name }}</h5>
         <img class="main-img" :src="course.image_url" :alt="course.title"/>
         <p>{{ course.description }}</p>
+        <p>Category: <b>{{ course.category }}</b></p>
         <div v-if="user">
             <div v-if="user.role==1">
                 <div v-if="!enrolled">
@@ -69,6 +70,9 @@ export default {
             return Object.values(this.user.courses).indexOf(this.course._id) > -1
         },
         deleteCourse() {
+            if (!confirm('Are you sure want to delete this course?')) {
+                return
+            }
             this.deleteCourseStore(this.course._id)
             .then(() => this.$router.push('/'))
             .catch(console.log)
