@@ -1,5 +1,6 @@
 <template>
-     <div class="container">
+    <div class="login-form row">
+     <div class="container col-md-4" >
      <form class="form-signin" @submit.prevent="submit">
       <h1>i<span class="ilearn-l">L</span>earn</h1>
       <!-- <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
@@ -15,9 +16,10 @@
       </div>
       <p v-if="incorrectPassword">{{ errorMsg }}</p>
       <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
+      <!-- <p class="mt-5 mb-3 text-muted">&copy; 2021</p> -->
     </form>
      </div>
+    </div>
 </template>
 
 <script>
@@ -67,24 +69,35 @@ export default {
 
 <style scoped>
 
+.login-form {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  background-color: #A0E7E5;
+  position: relative;
+  top: 0;
+
+}
 .container {
-  display: -ms-flexbox;
+  /* display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
   -ms-flex-align: center;
   -ms-flex-pack: center;
-  -webkit-box-align: center;
+  -webkit-box-align: center; */
   align-items: center;
-  -webkit-box-pack: center;
+  /* -webkit-box-pack: center; */
   justify-content: center;
   padding-top: 40px;
-  margin-top: 40px;
   padding-bottom: 40px;
   /* background-color: #f5f5f5; */
-  width: 40%;
+  /* width: 50%; */
   border: 1px solid  #e6e3e3;
-
+  background-color: white;
 }
+
 
 .form-signin {
   width: 100%;

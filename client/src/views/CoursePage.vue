@@ -12,42 +12,49 @@
                 </div>
                 <h4 v-else>Enrolled</h4>
             </div>
-            
+            <div v-else-if="isCourseOwner">
+                <button class="btn btn-outline-dark" @click="$router.push(`/course-editor/${course._id}`)">Edit Course</button>
+                <button class="btn btn-info" @click="$router.push(`/video-editor/${course._id}`)">+ Add Video</button>
+                <button class="btn btn-danger" @click="deleteCourse">Delete Course</button>
+            </div>
         </div>
         <div v-else>
-                <button class="btn btn-primary" @click="$router.push('/login')">Login to Enroll</button>
+            <button class="btn btn-primary" @click="$router.push('/login')">Login to Enroll</button>
         </div>
+        <div v-if="enrolled || isCourseOwner" class="video-container">
+            <h2>{{ videos.length > 0 ? 'Watch Course Videos' : 'No Videos Yet' }}</h2>
+            <Video :key="video._id" v-for="video in videos" :video="video"/>
+        </div>
+      
     </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
+import Video from '../components/Video'
 
 export default {
     name: 'CoursePage',
+    components: {
+        Video
+    },
     data() {
         return {
             course: null,
-            enrolled: false
+            enrolled: false,
+
         }
     },
     async mounted() {
         await this.$store.dispatch('loadUser')
-        this.course = await this.fetchCourse()
+        await this.fetchCourses([this.$route.params.id])
+        this.course = this.courses[0]
+        await this.fetchVideos([this.course._id])
+        console.log('vids: ' + this.videos)
         this.enrolled = this.alreadyEnrolled()
+        console.log('mount')
     },
     methods: {
-        async fetchCourse() {
-            const res = await fetch(`http://localhost:5000/api/courses/${this.$route.params.id}`)
-
-            if (res.status != 200) {
-                console.log('fetch error')
-                return undefined
-            }
-
-            const data = await res.json()
-            return data
-        },
         async enroll() {
             const newCourseList = Object.values(this.user.courses)
             newCourseList.push(this.course._id)
@@ -56,20 +63,35 @@ export default {
             .catch(console.log)
         },
         alreadyEnrolled() {
+            if (!this.user) {
+                return false
+            }
             return Object.values(this.user.courses).indexOf(this.course._id) > -1
         },
+        deleteCourse() {
+            this.deleteCourseStore(this.course._id)
+            .then(() => this.$router.push('/'))
+            .catch(console.log)
+        },
+        ...mapActions(['fetchCourses', 'fetchVideos']),
+        ...mapActions({deleteCourseStore: 'deletecCourse'})
     },
     computed: {
-        
-        ...mapState(['user'])
+        isCourseOwner() {
+            if (!this.user) {
+                return false
+            }
+            return this.user.role == 2 && this.course.owner_id == this.user._id
+        },
+        ...mapState(['user', 'courses', 'videos'])
     }
 }
 </script>
 
 <style scoped>
 .container {
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 20px;
+    padding-right: 20px;
     text-align: left;
     padding-bottom: 60px;
 }
@@ -88,4 +110,9 @@ p {
 .btn {
     margin-right: 10px;
 }
+.video-container {
+    margin-top: 50px;
+    text-align: center;
+}
+
 </style>

@@ -1,33 +1,24 @@
 
 <template>
-      <div class="course-editor row">
+      <div class="editor row">
      <div class="container col-md-6" >
      <form class="form-course-editor" @submit.prevent="submit">
       <h1>i<span class="ilearn-l">L</span>earn</h1>
-      <h1 class="h3 mb-3 font-weight-normal">Course Editor</h1>
+      <h1 class="h3 mb-3 font-weight-normal">Video Editor</h1>
       <div class="section">
         <label for="title">Title</label>
-        <input type="text" class="form-control"  placeholder=""  v-model="course.title" required>
+        <input type="text" class="form-control"  placeholder=""  v-model="video.title" required>
         <label for="description">Description</label>
-        <textarea type="text" class="form-control" rows="10" v-model="course.description" required></textarea>
+        <textarea type="text" class="form-control" rows="10" v-model="video.description" required></textarea>
       </div>
 
         <div class="section">
-            <label for="imageURL">Image URL</label>
-            <input type="text" class="form-control" placeholder="" v-model="course.image_url" required>
+            <label for="URL">Embed Link</label>
+            <input type="text" class="form-control" placeholder="" v-model="video.link" required>
         </div>
 
-        <div class="image-section section">
-            <img :src="course.image_url"/>
-        </div>
-
-         <div class="form-group select-category section">
-          <label for="selecteCategory">Category</label>
-          <select v-model="course.category" class="form-control" aria-label="Seletect category">
-            <option selected value="maths">Math</option>
-            <option value="english">Programming</option>
-            <option value="programming">English</option>
-          </select>
+        <div class="preview section">
+           <Video :video="video"/>
         </div>
        
         <div class="section">
@@ -41,16 +32,19 @@
 
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex'
+import Video from '../components/Video'
 
 export default {
-  name: 'CourseEditor',
+  name: 'VideoEditor',
+  components: {
+      Video
+  },
   data() {
     return {
-        course: {
+        video: {
             title: '',
             description: '',
-            category: 'maths',
-            image_url: '',
+            link: '',
         },
         errorMsg: ''     
     }
@@ -58,7 +52,7 @@ export default {
   async mounted() {
       if (this.$route.params.id) {
           await this.fetchCourses([this.$route.params.id])
-          this.course = this.courses[0]
+          // this.course = this.courses[0]
       }
       await this.loadUser()
       if (this.authenticated && this.user.role === 2) {
@@ -71,22 +65,22 @@ export default {
     async submit() {
       try {
         let method = 'POST'
-        let url = 'http://localhost:5000/api/courses'
-        if (this.$route.params.id) {
-            method = 'PUT'
-            url += '/' + this.$route.params.id
-        }
+        let url = `http://localhost:5000/api/videos/${this.$route.params.courseid}`
+        // if (this.$route.params.id) {
+        //     method = 'PUT'
+        //     url += '/' + this.$route.params.id
+        // }
         const res = await fetch(url, {
             method: method,
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: this.$store.getters.authToken
+                Authorization: this.authToken
             },
             credentials: 'include',
             body: JSON.stringify({
-                ...this.course,
-                image_public_id: '0',
+                ...this.video,
+                public_id: '0',
                 
             })
         })
@@ -104,28 +98,18 @@ export default {
         this.errorMsg = err
       }
     },
-    // async fetchCourse() {
-    //     const res = await fetch(`http://localhost:5000/api/courses/${this.$route.params.id}`)
-
-    //     if (res.status != 200) {
-    //         console.log('fetch error')
-    //         return undefined
-    //     }
-
-    //     const data = await res.json()
-    //     return data
-    // },
+  
     ...mapActions(['loadUser', 'fetchCourses'])
   },
   computed: {
-      ...mapGetters(['authenticated']),
+      ...mapGetters(['authenticated', 'authToken']),
       ...mapState(['user', 'courses'])
   }
 }
 </script>
 
 <style scoped>
-.course-editor {
+.editor {
   width: 100%;
   padding: 0;
   margin: 0;
@@ -138,7 +122,7 @@ export default {
 .section {
     margin-top: 40px;
 }
-.image-section {
+.preview {
     text-align: center;
 }
 .container {

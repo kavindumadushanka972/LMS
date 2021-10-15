@@ -1,10 +1,12 @@
 import {createStore} from 'vuex'
+import { deleteCourse } from '../../../controllers/courseCtrl'
 
 
 const store = createStore({
   state: {
     user: null,
-    courses: []
+    courses: [],
+    videos: []
   },
   mutations: {
     setUser(state, payload) {
@@ -19,6 +21,13 @@ const store = createStore({
     },
     clearCourses(state) {
       state.courses = []
+    },
+    clearVideos(state) {
+      state.videos = []
+    },
+    setVideos(state, payload) {
+      console.log('setvid: ' + payload)
+      state.videos = payload
     }
   },
   actions: {
@@ -47,7 +56,6 @@ const store = createStore({
         // console.log(data)
       },
       async updateCourseList(context, payload) {
-          context.commit('clearCourses')
           const res = await fetch('http://localhost:5000/user/enroll', {
               method: "PATCH",
               mode: 'cors',
@@ -67,6 +75,8 @@ const store = createStore({
           }
       },
       async fetchCourses(context, payload) {  // get courses for given id list
+        context.commit('clearCourses')
+        
         for (let id of payload) {
           
           const res = await fetch(`http://localhost:5000/api/courses/${id}`)
@@ -76,9 +86,46 @@ const store = createStore({
               return
           }
           context.commit('insertCourse', data)
+          console.log(data)
         }
-        console.log(context.state.courses)
     },
+    async fetchVideos(context, payload) { //fetch videos for a given course id
+      const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
+        method: "GET",
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: context.getters.authToken
+        },
+        credentials: 'include',
+      })
+      if (res.status == 200) {
+        const data = await res.json()
+        console.log('data: ' + data)
+        context.commit('setVideos', data)
+      } else {
+        throw 'could not load videos'
+      }
+      
+    },
+    async deleteCourse(context, payload) {
+        const res = await fetch(`http://localhost:5000/api/courses/${payload}`, {
+          method: "DELETE",
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: context.getters.authToken
+          },
+          credentials: 'include',
+        })
+        if (res.status == 200) {
+          const data = await res.json()
+          console.log(data)
+        } else {
+          throw 'could not delete course'
+        }
+      
+    }
   },
   getters: {
     authToken(state) {

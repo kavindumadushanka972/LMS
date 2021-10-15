@@ -6,6 +6,8 @@ import Register from '../views/Register'
 import CoursePage from '../views/CoursePage'
 import Dashboard from '../views/Dashboard'
 import CourseEditor from '../views/CourseEditor'
+import VideoEditor from '../views/VideoEditor'
+import store from '../store'
 
 
 const routes = [
@@ -56,12 +58,34 @@ const routes = [
     path: '/course-editor/:id',
     name: 'CourseEditor',
     component: CourseEditor
+  },
+  {
+    path: '/video-editor/:courseid',
+    name: 'VideoCreator',
+    component: VideoEditor
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+ 
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.name == 'Home') {
+    store.dispatch('loadUser')
+    .then(() => {
+      if (store.getters.authenticated) {
+        next({name: 'Dashboard'})
+      } else {
+        next()
+      }
+    })
+  } else {
+    next()
+  }
+})
+
 
 export default router

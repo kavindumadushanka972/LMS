@@ -20,13 +20,15 @@
                 <a class="dropdown-item" href="#">Tech & programming</a>
                 <a class="dropdown-item" href="#">Math</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="/courses">All</a>
+                <router-link class="dropdown-item" :to="{name: 'Courses', query: {page: 1}}">All</router-link>
                 </div>
             </li>
             <li class="nav-item">
                 <a v-if="user" class="nav-link" @click="logout" >LOGOUT</a>
-                <router-link v-else class="nav-link" to="/login">LOGIN</router-link>
+              
             </li>
+                    <li><router-link v-if="!user" class="nav-link" to="/login">LOGIN</router-link></li>
+                    <li><router-link v-if="!user" class="nav-link" to="/register">SIGNUP</router-link></li>
             </ul>
             <!-- <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -44,11 +46,12 @@ export default {
     name: 'Header',
     data() {
         return {
-            
+            loggedin: false
         }
     },
     async mounted() {
         await this.$store.dispatch('loadUser')
+        this.loggedin = this.user != null
     },
     methods: {
         async logout() {
@@ -65,15 +68,16 @@ export default {
                 const data = await res.json()
                 console.log(data, res.status)
 
-                // if (res.status !== 200) {
-                //     return
-                // }
+                if (res.status !== 200) {
+                    return
+                }
             
                 console.log('logint out: ' + this.user)
             
                 // this.$store.commit('setAuth', data)
                 localStorage.removeItem('auth')
                 this.$store.commit('setUser', null)
+                this.$loggedin = false
                 this.$router.push('/')
 
             } catch(err) {

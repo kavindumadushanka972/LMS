@@ -1,11 +1,11 @@
 <template>
-    <div :class="['container', mode=='common'?'col-lg-3 col-md-4 col-sm-6':'col-md-4']">
+    <div :class="['course', 'align-self-left', mode=='common'?'col-lg-3 col-md-4 col-sm-6':'col-md-4']">
         <img :src="course.image_url" @click="$router.push(`/course/${course._id}`)" :alt="course.title"/>
         <h4 @click="$router.push(`/course/${course._id}`)">{{ course.title }}</h4>
         <p>by {{ course.owner_name }}</p>
         <div v-if="mode === 'teacher'">
             <button class="btn btn-outline-dark" @click="$router.push(`/course-editor/${course._id}`)">Edit</button>
-            <button class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+            <button class="btn btn-danger" @click="deleteCourse"><i class="far fa-trash-alt"></i></button>
 
         </div>
         <!-- <div v-else-if="mode === 'student'">
@@ -21,18 +21,25 @@ export default {
     props: {
         course: Object,
         mode: {
+            default: 'common',
             enum: ['teacher', 'student', 'common']
+        }
+    },
+    methods: {
+        deleteCourse() {
+            this.$store.dispatch('deleteCourse', this.course._id)
+            this.$router.push('/')
         }
     }
 }
 </script>
 
 <style scoped>
-.container {
+ .course {
     text-align: left;
     margin-bottom: 30px;
     padding: 10px 25px;
-}
+} 
 h4 {
     font-weight: 600;
     margin-bottom: 2px;
@@ -42,6 +49,8 @@ h4 {
 img {
     width:inherit;
     cursor: pointer;
+    height: 10rem;
+    object-fit: cover;
 }
 .btn {
     font-size: 0.9rem;

@@ -69,9 +69,9 @@ export default {
     // await this.$store.dispatch('loadUser')
     //   // console.log('auth: ' + this.$store.getters.authToken)
     //   console.log(': ' + this.$store.getters.authenticated)
-    if (this.user) {
-      this.$router.push('/dashboard')
-    }
+    // if (this.user) {
+    //   this.$router.push('/dashboard')
+    // }
   },
   methods: {
         async fetchFeaturedCourses() {

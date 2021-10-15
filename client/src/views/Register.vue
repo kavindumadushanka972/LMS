@@ -1,5 +1,5 @@
 <template>
-      <div class="reg-form row">
+    <div class="reg-form row">
      <div class="container col-md-6" >
      <form class="form-signin" @submit.prevent="submit">
       <h1>i<span class="ilearn-l">L</span>earn</h1>
@@ -39,22 +39,7 @@
             <option value="2">Teacher</option>
           </select>
         </div>
-      </div>
-
-
-      <!-- <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required> -->
-      
-      <!-- <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div> -->
-      
-      
-     
+      </div>    
       <p v-if="errorMsg != ''">{{ errorMsg }}</p>
       <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
       <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
