@@ -35,6 +35,9 @@ const store = createStore({
     removeCourse(state, payload) {
       state.courses = state.courses.filter((elem) => elem._id !== payload)
       console.log('removing ' +  state.courses.indexOf(payload))
+    },
+    removeVideo(state, payload) {
+      state.videos = state.videos.filter((video) => video._id != payload)
     }
   },
   actions: {
@@ -132,7 +135,24 @@ const store = createStore({
         } else {
           throw 'could not delete course'
         }
-      
+    }, 
+    async deleteVideo(context, payload) { // delete video of given video id
+      const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
+        method: "DELETE",
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: context.getters.authToken
+        },
+        credentials: 'include',
+      })
+      if (res.status == 200) {
+        const data = await res.json()
+        context.commit('removeVideo', payload)
+        console.log(data)
+      } else {
+        throw 'could not delete video'
+      }
     }
   },
   getters: {

@@ -4,16 +4,25 @@
         <div class="text">
             <h3>{{ video.title }}</h3>
             <p>{{ video.description }}</p>
+            <button v-if="mode=='admin'" class="btn btn-danger delete-btn" @click="deleteVideo(video._id)"><i class="far fa-trash-alt"></i></button>
         </div>
+
     </div>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 export default {
     name: 'Video',
     props: {
-        video: null
-    }
+        video: null,
+        mode: {
+            default: 'viewer',
+            enum: ['viewer', 'admin']
+        }
+    },
+    methods: mapActions(['deleteVideo'])
 }
 </script>
 
@@ -21,7 +30,7 @@ export default {
 .video {
     text-align: center;
     padding: 0;
-    margin: 30px auto 30px auto;
+    margin: 30px auto 50px auto;
 }
 iframe {
     width: 100%;
@@ -29,5 +38,11 @@ iframe {
 }
 .text {
     text-align: left;
+    width: 70%;
+    margin-right: 0;
+    /* display: inline-block; */
+}
+.delete-button {
+    float: left;
 }
 </style>

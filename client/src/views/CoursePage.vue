@@ -24,7 +24,7 @@
         </div>
         <div v-if="enrolled || isCourseOwner" class="video-container">
             <h2>{{ videos.length > 0 ? 'Watch Course Videos' : 'No Videos Yet' }}</h2>
-            <Video :key="video._id" v-for="video in videos" :video="video"/>
+            <Video :key="video._id" v-for="video in videos" :video="video" :mode="isCourseOwner? 'admin' : 'viewer'"/>
         </div>
       
     </div>
@@ -43,7 +43,6 @@ export default {
         return {
             course: null,
             enrolled: false,
-
         }
     },
     async mounted() {

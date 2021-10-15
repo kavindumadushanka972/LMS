@@ -1,6 +1,8 @@
 <template>
     <div class="courses justify-content-start">
         <h1>Find Courses of Your Dreams</h1>
+       
+        <CourseSearch/>
         <div class="row justify-content-start">
             <Course :key="course.id" v-for="course in courses" :course="course" :mode="'common'"/>
         </div>
@@ -16,28 +18,31 @@
 
 <script>
 import Course from '../components/Course'
+import CourseSearch from '../components/CourseSearch'
 
 export default {
     name: 'Courses',
     components: {
-        Course
+        Course,
+        CourseSearch
     },
     data() {
         return {
             courses: [],
             couseView: false,
-            page: 1
+            page: 1,
+            category: 'all'
         }
     },
     async mounted() {
         this.page = parseInt(this.$route.query.page)
-        this.courses = await this.fetchCourses(this.page)
+        this.courses = await this.fetchCourses(this.$route.query.param)
     //    console.log(localStorage.auth)
 
     },
     methods: {
-        async fetchCourses(number) {
-            const res = await fetch(`http://localhost:5000/api/courses?page=${number}`)
+        async fetchCourses(query) {
+            const res = await fetch(`http://localhost:5000/api/courses?` + new URLSearchParams(query))
 
             if (res.status != 200) {
                 return []
@@ -50,13 +55,13 @@ export default {
         },
         async nextPage() {
             this.page++
-            this.courses = await this.fetchCourses(this.page)
             this.$router.push({query: {page: this.page}})
+            this.courses = await this.fetchCourses({page: this.page})
         },
         async prevPage() {
             this.page--
-            this.courses = await this.fetchCourses(this.page)
             this.$router.push({query: {page: this.page}})
+            this.courses = await this.fetchCourses({page: this.page})
         }
         
     },
@@ -76,6 +81,10 @@ h1 {
     text-align: left;
     padding: 15px;
     margin: 20px;
+    width: 100%;
+}
+.row {
+    width: 100%;
 }
 .row {
     width: fit-content;
@@ -88,7 +97,8 @@ h1 {
     display: inline;
     margin: 30px;
 }
-.bottom-control .btn {
-    /* width: 8rem; */
+.category-select {
+
 }
+
 </style>

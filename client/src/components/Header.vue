@@ -17,8 +17,12 @@
                 COURSES
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Tech & programming</a>
-                <a class="dropdown-item" href="#">Math</a>
+                <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'maths', page: 1}}">Maths</router-link>
+                <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'programming', page: 1}}">Programming</router-link>
+                <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'multimedia', page: 1}}">Multimedia</router-link>
+                <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'english', page: 1}}">English</router-link>
+                <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'other', page: 1}}">Other</router-link>
+
                 <div class="dropdown-divider"></div>
                 <router-link class="dropdown-item" :to="{name: 'Courses', query: {page: 1}}">All</router-link>
                 </div>
