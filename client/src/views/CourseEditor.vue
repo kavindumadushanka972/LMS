@@ -43,6 +43,7 @@
 
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex'
+import CourseService from '../services/CourseService'
 
 export default {
   name: 'CourseEditor',
@@ -58,56 +59,62 @@ export default {
     }
   },
   async mounted() {
-      if (this.$route.params.id) {
-          await this.fetchCourses([this.$route.params.id])
-          this.course = this.courses[0]
-      }
-      await this.loadUser()
+    await this.loadUser()
       if (this.authenticated && this.user.role === 2) {
-
+        if (this.$route.params.id) {
+            // await this.fetchCourses([this.$route.params.id])
+            const courses = await CourseService.getCoursesByIds([this.$route.params.id])
+            this.course = courses[0]
+        }
       } else {
           this.$router.push('/')
-      }
+      }  
   },
   methods: {
     async submit() {
-      try {
-        let method = 'POST'
-        let url = 'http://localhost:5000/api/courses'
-        if (this.$route.params.id) {
-            method = 'PUT'
-            url += '/' + this.$route.params.id
-        }
-        const res = await fetch(url, {
-            method: method,
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.$store.getters.authToken
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                ...this.course,
-                image_public_id: '0',
+      // try {
+      //   let method = 'POST'
+      //   let url = 'http://localhost:5000/api/courses'
+      //   if (this.$route.params.id) {
+      //       method = 'PUT'
+      //       url += '/' + this.$route.params.id
+      //   }
+      //   const res = await fetch(url, {
+      //       method: method,
+      //       mode: 'cors',
+      //       headers: {
+      //           'Content-Type': 'application/json',
+      //           Authorization: this.$store.getters.authToken
+      //       },
+      //       credentials: 'include',
+      //       body: JSON.stringify({
+      //           ...this.course,
+      //           image_public_id: '0',
                 
-            })
-        })
-        const data = await res.json()
-        console.log(data)
+      //       })
+      //   })
+      //   const data = await res.json()
+      //   console.log(data)
 
-        if (res.status !== 200) {
-          this.errorMsg = data.msg
-          return
-        }
-        this.errorMsg = ''
-        this.$router.push('/')
+      //   if (res.status !== 200) {
+      //     this.errorMsg = data.msg
+      //     return
+      //   }
+      //   this.errorMsg = ''
+      //   this.$router.push('/')
 
+      // } catch(err) {
+      //   this.errorMsg = err
+      // }
+      try {
+        await CourseService.updateCourse(this.course, this.$route.params.id)
+        this.$router.push('/dashboard')
       } catch(err) {
-        this.errorMsg = err
+        // Toast 
       }
     },
   
-    ...mapActions(['loadUser', 'fetchCourses'])
+    ...mapActions(['loadUser'])
   },
   computed: {
       ...mapGetters(['authenticated']),
@@ -132,6 +139,9 @@ export default {
 }
 .image-section {
     text-align: center;
+}
+img {
+  width: 90%;
 }
 .container {
   /* display: -ms-flexbox;

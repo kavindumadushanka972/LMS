@@ -1,4 +1,5 @@
 import {createStore} from 'vuex'
+import CourseService from '../services/CourseService'
 
 import UserService from '../services/UserService'
 
@@ -34,7 +35,6 @@ const store = createStore({
     },
     removeCourse(state, payload) {
       state.courses = state.courses.filter((elem) => elem._id !== payload)
-      console.log('removing ' +  state.courses.indexOf(payload))
     },
     removeVideo(state, payload) {
       state.videos = state.videos.filter((video) => video._id != payload)
@@ -50,63 +50,36 @@ const store = createStore({
           context.commit('setUser', null)
           return
         }
-        
-        // const res = await fetch('http://localhost:5000/user/infor', {
-        //     method: "GET",
-        //     mode: 'cors',
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //       Authorization: context.getters.authToken
-        //     },
-        //     credentials: 'include',
-        // })
 
-        // const data = await res.json()
         await UserService.getUser()
         .then((data) => context.commit('setUser', data))
         .catch((err) => context.commit('setUser', null))
-
-        
-        // console.log(data)
       },
       async updateCourseList(context, payload) {
-          // const res = await fetch('http://localhost:5000/user/enroll', {
-          //     method: "PATCH",
-          //     mode: 'cors',
-          //     headers: {
-          //         'Content-Type': 'application/json',
-          //         Authorization: context.getters.authToken
-          //     },
-          //     credentials: 'include',
-          //     body: JSON.stringify({course: payload})
-          // }).catch(err => {throw err})
-
-          // if (res.status == 200) {
-          //     const data = await res.json()
-          //     context.commit('setUserCourseList', payload)
-          // } else {
-          //   throw 'could not enroll'
-          // }
-          
-            await UserService.enroll(payload)
-            context.commit('setUserCourseList', payload)
-         
+        await UserService.enroll(payload)
+        context.commit('setUserCourseList', payload)
       },
-      async fetchCourses(context, payload) {  // get courses for given id list
-        context.commit('clearCourses')
+    //   async fetchCourses(context, payload) {  // get courses for given id list
         
-        for (let id of payload) {
+    //     // for (let id of payload) {
           
-          const res = await fetch(`http://localhost:5000/api/courses/${id}`)
-          const data = await res.json()
-          if (res.status != 200) {
-              console.log(data.msg)
-              return
-          }
-          context.commit('insertCourse', data)
-          console.log(data)
-        }
-    },
+    //     //   const res = await fetch(`http://localhost:5000/api/courses/${id}`)
+    //     //   const data = await res.json()
+    //     //   if (res.status != 200) {
+    //     //       console.log(data.msg)
+    //     //       return
+    //     //   }
+    //     //   context.commit('insertCourse', data)
+    //     //   console.log(data)
+    //     // }
+    //     try {
+    //       const courses = await CourseService.getCoursesByIds(payload)
+    //       context.commit('setCourseList', courses)
+    //     } catch (err) {
+    //       context.commit('clearCourses')
+    //       console.log('reject')
+    //     }
+    // },
     async fetchVideos(context, payload) { //fetch videos for a given course id
       const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
         method: "GET",
@@ -126,24 +99,24 @@ const store = createStore({
       }
       
     },
-    async deleteCourse(context, payload) {
-        const res = await fetch(`http://localhost:5000/api/courses/${payload}`, {
-          method: "DELETE",
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: context.getters.authToken
-          },
-          credentials: 'include',
-        })
-        if (res.status == 200) {
-          const data = await res.json()
-          context.commit('removeCourse', payload)
-          console.log(data)
-        } else {
-          throw 'could not delete course'
-        }
-    }, 
+    // async deleteCourse(context, payload) {
+    //     const res = await fetch(`http://localhost:5000/api/courses/${payload}`, {
+    //       method: "DELETE",
+    //       mode: 'cors',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         Authorization: context.getters.authToken
+    //       },
+    //       credentials: 'include',
+    //     })
+    //     if (res.status == 200) {
+    //       const data = await res.json()
+    //       context.commit('removeCourse', payload)
+    //       console.log(data)
+    //     } else {
+    //       throw 'could not delete course'
+    //     }
+    // }, 
     async deleteVideo(context, payload) { // delete video of given video id
       const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
         method: "DELETE",

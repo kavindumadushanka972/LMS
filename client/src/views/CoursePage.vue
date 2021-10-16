@@ -33,6 +33,8 @@
 <script>
 import {mapState, mapActions} from 'vuex'
 import Video from '../components/Video'
+import CourseService from '../services/CourseService'
+import UserService from '../services/UserService'
 
 export default {
     name: 'CoursePage',
@@ -47,8 +49,12 @@ export default {
     },
     async mounted() {
         await this.$store.dispatch('loadUser')
-        await this.fetchCourses([this.$route.params.id])
-        this.course = this.courses[0]
+        // await this.fetchCourses([this.$route.params.id])
+        const courses = await CourseService.getCoursesByIds([this.$route.params.id])
+
+        console.log(courses[0])
+        this.course = courses[0]
+        // this.course = this.courses[0]
         await this.fetchVideos([this.course._id])
         console.log('vids: ' + this.videos)
         this.enrolled = this.alreadyEnrolled()
@@ -62,10 +68,12 @@ export default {
                 // this.$store.dispatch('updateCourseList', newCourseList)
                 // .then(() => this.enrolled = true)
                 // .catch(console.log)
-                await this.updateCourseList(newCourseList)
+                // await this.updateCourseList(newCourseList)
+                UserService.enroll(newCourseList)
                 this.enrolled = true
             } catch(err) {
                 // toast
+                console.log(err)
             }
         },
         alreadyEnrolled() {
@@ -74,15 +82,20 @@ export default {
             }
             return Object.values(this.user.courses).indexOf(this.course._id) > -1
         },
-        deleteCourse() {
+        async deleteCourse() {
             if (!confirm('Are you sure want to delete this course?')) {
                 return
             }
-            this.deleteCourseStore(this.course._id)
-            .then(() => this.$router.push('/'))
-            .catch(console.log)
+
+            try {
+                await CourseService.deleteCourse(this.course._id)
+                this.$store.commit('removeCourse', this.course._id)
+                this.$router.push('/')
+            } catch(err) {
+                // Toast
+            }
         },
-        ...mapActions(['fetchCourses', 'fetchVideos', 'updateCourseList']),
+        ...mapActions(['fetchCourses', 'fetchVideos']),
         ...mapActions({deleteCourseStore: 'deletecCourse'})
     },
     computed: {

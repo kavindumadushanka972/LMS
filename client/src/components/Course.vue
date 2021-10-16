@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import CourseService from '../services/CourseService'
 export default {
     name: 'Course',
     props: {
@@ -29,12 +30,18 @@ export default {
         }
     },
     methods: {
-        deleteCourse() {
+        async deleteCourse() {
              if (!confirm('Are you sure want to delete this course?')) {
                 return
             }
-            this.$store.dispatch('deleteCourse', this.course._id)
-            this.$router.push('/')
+            // this.$store.dispatch('deleteCourse', this.course._id)
+            // this.$router.push('/')
+            try {
+                await CourseService.deleteCourse(this.course._id)
+                this.$store.commit('removeCourse', this.course._id)
+            } catch(err) {
+                // Toast
+            }
         }
     }
 }

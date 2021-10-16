@@ -34,8 +34,9 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import Course from '../components/Course'
+import CourseService from '../services/CourseService'
 
 export default {
     name: 'Dashboard',
@@ -75,47 +76,63 @@ export default {
             }
         },
         async fetchStudentCourses() {
-                let courseList = this.user.courses
-                this.clearCourses()
-                for (let courseID of courseList) {
-                    const res = await fetch(`http://localhost:5000/api/courses/${courseID}`)
-                        .catch(console.log)
+            // let courseList = this.user.courses
+            // this.clearCourses()
+            // for (let courseID of courseList) {
+            //     const res = await fetch(`http://localhost:5000/api/courses/${courseID}`)
+            //         .catch(console.log)
 
-                    const data = await res.json()
-                    if (res.status != 200) {
-                        continue
-                    }
-                    
-                    console.log(data)   
-                    this.insertCourse(data)
-                    // this.courses.push(data)
-                }
+            //     const data = await res.json()
+            //     if (res.status != 200) {
+            //         continue
+            //     }
+                
+            //     console.log(data)   
+            //     this.insertCourse(data)
+            //     // this.courses.push(data)
+            // }
+            try {
+                const courses = await CourseService.getCoursesByIds(this.user.courses)
+                this.setCourseList(courses)
+            } catch(err) {
+                // Toast
+            }
+            // await this.fetchCourses(this.user.courses)
+
         },
         async fetchTeacherCourses() {
-            const res = await fetch(`http://localhost:5000/api/mycourses/${this.user._id}`, {
-                method: "GET",
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: this.$store.getters.authToken
-                },
-                credentials: 'include'
-            })
+            // const res = await fetch(`http://localhost:5000/api/mycourses/${this.user._id}`, {
+            //     method: "GET",
+            //     mode: 'cors',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         Authorization: this.$store.getters.authToken
+            //     },
+            //     credentials: 'include'
+            // })
             
-            const data = await res.json()
-            console.log('d ' + data)
-            if (res.status !== 200) {
-                return
-            }  
-            this.setCourseList(data)
-            // for (let course of data) {
-            //     this.courses.push(course)
-            // }
-            console.log('5 ' + this.$store.state.courses)
-            // this.courses = data
-            console.log(this.courses[0])
+            // const data = await res.json()
+            // console.log('d ' + data)
+            // if (res.status !== 200) {
+            //     return
+            // }  
+            // this.setCourseList(data)
+            // // for (let course of data) {
+            // //     this.courses.push(course)
+            // // }
+            // console.log('5 ' + this.$store.state.courses)
+            // // this.courses = data
+            // console.log(this.courses[0])
+            try {
+                const courses = await CourseService.getCoursesByOwnerId(this.user._id)
+                this.setCourseList(courses)
+            } catch(err) {
+                // Toast
+            }
+
         },
-        ...mapMutations(['setCourseList', 'clearCourses', 'insertCourse'])
+        ...mapMutations(['setCourseList', 'clearCourses', 'insertCourse']),
+        ...mapActions(['fetchCourses'])
     }
 }
 </script>
