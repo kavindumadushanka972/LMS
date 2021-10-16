@@ -47,6 +47,7 @@
 import Header from '../components/Header'
 import Course from '../components/Course'
 import {mapState, mapGetters} from 'vuex'
+import CourseService from '../services/CourseService'
 
 
 export default {
@@ -75,18 +76,20 @@ export default {
   },
   methods: {
         async fetchFeaturedCourses() {
-            // const res = await fetch('http://localhost:5000/api/courses?')
-            const res = await fetch('http://localhost:5000/api/courses?' + new URLSearchParams({
-                sorted: 'enrolled_number',
-                page: 1
-            }))
+            // // const res = await fetch('http://localhost:5000/api/courses?')
+            // const res = await fetch('http://localhost:5000/api/courses?' + new URLSearchParams({
+            //     sorted: 'enrolled_number',
+            //     page: 1
+            // }))
 
-            if (res.status != 200) {
-                return []
-            }
+            // if (res.status != 200) {
+            //     return []
+            // }
         
-            const data = await res.json()
-            return data.courses.slice(0, 4)
+            // const data = await res.json()
+            const courses = await CourseService.getCoursesByQuery({page: 1, sort: '-enrolled_number'})
+            console.log(courses)
+            return courses.slice(0, 4)
         }
     },
     computed: {

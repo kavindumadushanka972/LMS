@@ -7,9 +7,9 @@
             <Course :key="course.id" v-for="course in courses" :course="course" :mode="'common'"/>
         </div>
         <div class="bottom-control">
-            <button v-if="page > 1" class="btn btn-dark" @click="prevPage"><i class="fas fa-arrow-left"></i></button>
+            <button :disabled="page <= 1" class="btn btn-dark" @click="prevPage"><i class="fas fa-arrow-left"></i></button>
             <p>Page {{ page }}</p>
-            <button v-if="showNextButton" class="btn btn-dark" @click="nextPage"><i class="fas fa-arrow-right"></i></button>
+            <button :disabled="!showNextButton" class="btn btn-dark" @click="nextPage"><i class="fas fa-arrow-right"></i></button>
         </div>      
     </div>
 </template>
@@ -17,6 +17,7 @@
 <script>
 import Course from '../components/Course'
 import CourseSearch from '../components/CourseSearch'
+import CourseService from '../services/CourseService'
 
 export default {
     name: 'Courses',
@@ -38,39 +39,41 @@ export default {
         } else {
             this.page = 1
         }
-        this.courses = await this.fetchCourses(this.$route.query.param)
+        this.courses = await CourseService.getCoursesByQuery(this.$route.query.param)
     //    console.log(localStorage.auth)
 
     },
     methods: {
-        async fetchCourses(query) {
-            const res = await fetch(`http://localhost:5000/api/courses?` + new URLSearchParams(query))
-            console.log(`http://localhost:5000/api/courses?` + new URLSearchParams(query))
-            if (res.status != 200) {
-                return []
-            }
+        // async fetchCourses(query) {
+        //     const res = await fetch(`http://localhost:5000/api/courses?` + new URLSearchParams(query))
+        //     console.log(`http://localhost:5000/api/courses?` + new URLSearchParams(query))
+        //     if (res.status != 200) {
+        //         return []
+        //     }
         
-            const data = await res.json()
-            console.log(data.courses)
+        //     const data = await res.json()
+        //     console.log(data.courses)
 
-            return data.courses
-        },
+        //     return data.courses
+        // },
         async nextPage() {
             this.page++
             // this.$router.push({query: {page: this.page}})
-            this.courses = await this.fetchCourses({page: this.page})
+            this.courses = await CourseService.getCoursesByQuery({page: this.page})
         },
         async prevPage() {
             this.page--
             // this.$router.push({query: {page: this.page}})
-            this.courses = await this.fetchCourses({page: this.page})
+            this.courses = await CourseService.getCoursesByQuery({page: this.page})
         },
         async search(searchData) {
             console.log(searchData)
             // this.$router.push({query: {'title[regex]': searchData.keyword}})
-            this.courses = await this.fetchCourses({
+            this.courses = await CourseService.getCoursesByQuery({
                 'title[regex]': searchData.keyword,
-                })
+                sort: searchData.sort,
+                category: searchData.category
+            })
         }
         
     },

@@ -10,18 +10,19 @@
             </div> -->
             <div class="col-lg-2 col-sm-6">
               <select v-model="search.category" class="form-control form-control-sm category-select" aria-label="Seletect category">
-                <option selected value="all" disabled>Select category</option>
+                <option selected value="" >Any category</option>
                 <option value="maths">Math</option>
-                <option value="english">Programming</option>
+                <option value="programming">Programming</option>
                 <option value="multimedia">Multimedia</option>
-                <option value="programming">English</option>
+                <option value="english">English</option>
                 <option value="other">Other</option>
               </select>
             </div>
             <div class="col-lg-2 col-sm-6">
               <select v-model="search.sort" class="form-control form-control-sm sort-select" aria-label="Seletect sort">
-                <option selected value="createdAt">Latest first</option>
-                <option value="enrolled_number">Trending first</option>
+                <option selected value="-createdAt">Latest first</option>
+                <option value="-enrolled_number">Trending first</option>
+                <option selected value="createdAt">Oldest first</option>
               </select>
             </div>
             <div class="col-lg-1">
@@ -39,8 +40,8 @@ export default {
     return {
       search: {
         keyword: '',
-        category: 'all',
-        sort: 'createdAt'
+        category: '',
+        sort: '-createdAt'
       }
     }
   },
