@@ -116,7 +116,7 @@ class UserService {
         })
     }
 
-    static enroll(newCourses) {
+    static enroll(newCourse) {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await fetch(url + 'enroll', {
@@ -127,7 +127,7 @@ class UserService {
                         Authorization: localStorage.getItem('auth')
                     },
                     credentials: 'include',
-                    body: JSON.stringify({course: newCourses})
+                    body: JSON.stringify({course: newCourse})
                 })
                 
                 const data = await res.json()

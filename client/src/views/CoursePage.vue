@@ -5,6 +5,7 @@
         <img class="main-img" :src="course.image_url" :alt="course.title"/>
         <p>{{ course.description }}</p>
         <p>Category: <b>{{ course.category }}</b></p>
+        <p>Enrolled number: <b>{{ course.enrolled_number }}</b></p>
         <div v-if="user">
             <div v-if="user.role==1">
                 <div v-if="!enrolled">
@@ -58,7 +59,7 @@ export default {
         await this.fetchVideos([this.course._id])
         console.log('vids: ' + this.videos)
         this.enrolled = this.alreadyEnrolled()
-        console.log('mount')
+        console.log(this.course)
     },
     methods: {
         async enroll() {
@@ -69,8 +70,9 @@ export default {
                 // .then(() => this.enrolled = true)
                 // .catch(console.log)
                 // await this.updateCourseList(newCourseList)
-                UserService.enroll(newCourseList)
+                UserService.enroll(this.course._id)
                 this.enrolled = true
+                this.course.enrolled_number++
             } catch(err) {
                 // toast
                 console.log(err)

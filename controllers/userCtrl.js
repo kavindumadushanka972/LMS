@@ -1,4 +1,5 @@
 const Users  = require('../models/userModel')
+const Course = require('../models/courseModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -111,9 +112,10 @@ const userCtrl = {
             const user = await Users.findById(req.user.id)
             if(!user) return res.status(500).json({msg: "User does not exists."})
 
-            await Users.findByIdAndUpdate({_id: req.user.id}, {
-                courses: req.body.course
-            })
+            await Users.updateOne({_id: req.user.id}, {$push: {courses: req.body.course}})
+            
+            console.log('enrolled ' + req.body.course)
+            console.log(await Course.updateOne({_id: req.body.course}, {$inc: {enrolled_number: 1}}))
 
             res.json({msg: "Enrolled"})
         } catch (err) {

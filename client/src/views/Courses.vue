@@ -3,6 +3,7 @@
         <h1>Find Courses of Your Dreams</h1>
        
         <CourseSearch @do_search="search"/>
+        <h4 v-if="courses.length == 0" style="text-align: center">No course found</h4>
         <div class="row">
             <Course :key="course.id" v-for="course in courses" :course="course" :mode="'common'"/>
         </div>
@@ -67,13 +68,15 @@ export default {
             this.courses = await CourseService.getCoursesByQuery({page: this.page})
         },
         async search(searchData) {
-            console.log(searchData)
-            // this.$router.push({query: {'title[regex]': searchData.keyword}})
-            this.courses = await CourseService.getCoursesByQuery({
+            const query = {
                 'title[regex]': searchData.keyword,
-                sort: searchData.sort,
-                category: searchData.category
-            })
+                sort: searchData.sort
+            }
+            if (searchData.category !== '') {
+                query.category = searchData.category
+            }
+            this.$router.push({query: query})
+            this.courses = await CourseService.getCoursesByQuery(query)
         }
         
     },

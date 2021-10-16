@@ -8,7 +8,11 @@ const cookieParser = require('cookie-parser')
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
+const corsConfig = {
+    credentials: true,
+    origin: 'http://localhost:8081',
+};
+app.use(cors(corsConfig))
 app.use(fileUpload({
     useTempFiles: true
 }))
