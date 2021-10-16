@@ -1,19 +1,17 @@
 <template>
-    <div class="courses justify-content-start">
+    <div class="courses">
         <h1>Find Courses of Your Dreams</h1>
        
-        <CourseSearch/>
-        <div class="row justify-content-start">
+        <CourseSearch @do_search="search"/>
+        <div class="row">
             <Course :key="course.id" v-for="course in courses" :course="course" :mode="'common'"/>
         </div>
         <div class="bottom-control">
             <button v-if="page > 1" class="btn btn-dark" @click="prevPage"><i class="fas fa-arrow-left"></i></button>
             <p>Page {{ page }}</p>
             <button v-if="showNextButton" class="btn btn-dark" @click="nextPage"><i class="fas fa-arrow-right"></i></button>
-        </div>
-        
+        </div>      
     </div>
-   
 </template>
 
 <script>
@@ -35,7 +33,11 @@ export default {
         }
     },
     async mounted() {
-        this.page = parseInt(this.$route.query.page)
+        if (this.$route.query.page) {
+            this.page = parseInt(this.$route.query.page)
+        } else {
+            this.page = 1
+        }
         this.courses = await this.fetchCourses(this.$route.query.param)
     //    console.log(localStorage.auth)
 
@@ -43,25 +45,32 @@ export default {
     methods: {
         async fetchCourses(query) {
             const res = await fetch(`http://localhost:5000/api/courses?` + new URLSearchParams(query))
-
+            console.log(`http://localhost:5000/api/courses?` + new URLSearchParams(query))
             if (res.status != 200) {
                 return []
             }
         
             const data = await res.json()
-            console.log(data)
+            console.log(data.courses)
 
             return data.courses
         },
         async nextPage() {
             this.page++
-            this.$router.push({query: {page: this.page}})
+            // this.$router.push({query: {page: this.page}})
             this.courses = await this.fetchCourses({page: this.page})
         },
         async prevPage() {
             this.page--
-            this.$router.push({query: {page: this.page}})
+            // this.$router.push({query: {page: this.page}})
             this.courses = await this.fetchCourses({page: this.page})
+        },
+        async search(searchData) {
+            console.log(searchData)
+            // this.$router.push({query: {'title[regex]': searchData.keyword}})
+            this.courses = await this.fetchCourses({
+                'title[regex]': searchData.keyword,
+                })
         }
         
     },
@@ -87,7 +96,6 @@ h1 {
     width: 100%;
 }
 .row {
-    width: fit-content;
     margin: 30px auto 0 auto;
 }
 .bottom-control {

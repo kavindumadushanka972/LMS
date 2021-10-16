@@ -56,11 +56,17 @@ export default {
     },
     methods: {
         async enroll() {
-            const newCourseList = Object.values(this.user.courses)
-            newCourseList.push(this.course._id)
-            this.$store.dispatch('updateCourseList', newCourseList)
-            .then(() => this.enrolled = true)
-            .catch(console.log)
+            try {
+                const newCourseList = Object.values(this.user.courses)
+                newCourseList.push(this.course._id)
+                // this.$store.dispatch('updateCourseList', newCourseList)
+                // .then(() => this.enrolled = true)
+                // .catch(console.log)
+                await this.updateCourseList(newCourseList)
+                this.enrolled = true
+            } catch(err) {
+                // toast
+            }
         },
         alreadyEnrolled() {
             if (!this.user) {
@@ -76,7 +82,7 @@ export default {
             .then(() => this.$router.push('/'))
             .catch(console.log)
         },
-        ...mapActions(['fetchCourses', 'fetchVideos']),
+        ...mapActions(['fetchCourses', 'fetchVideos', 'updateCourseList']),
         ...mapActions({deleteCourseStore: 'deletecCourse'})
     },
     computed: {

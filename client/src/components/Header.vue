@@ -45,12 +45,13 @@
 
 <script>
 import {mapGetters, mapState, mapMutations} from 'vuex'
+import UserService from '../services/UserService'
 
 export default {
     name: 'Header',
     data() {
         return {
-            loggedin: false
+            // loggedin: false
         }
     },
     async mounted() {
@@ -59,34 +60,40 @@ export default {
     },
     methods: {
         async logout() {
-             try {
-                const res = await fetch('http://localhost:5000/user/logout', {
-                    method: "POST",
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('auth')},
-                    credentials: 'include',
-                    body: ''
-                })
-                const data = await res.json()
-                console.log(data, res.status)
+            //  try {
+            //     const res = await fetch('http://localhost:5000/user/logout', {
+            //         method: "POST",
+            //         mode: 'cors',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'Authorization': 'Bearer ' + localStorage.getItem('auth')},
+            //         credentials: 'include',
+            //         body: ''
+            //     })
+            //     const data = await res.json()
+            //     console.log(data, res.status)
 
-                if (res.status !== 200) {
-                    return
-                }
+            //     if (res.status !== 200) {
+            //         return
+            //     }
             
-                console.log('logint out: ' + this.user)
+            //     console.log('logint out: ' + this.user)
             
-                // this.$store.commit('setAuth', data)
-                localStorage.removeItem('auth')
+            //     // this.$store.commit('setAuth', data)
+            //     localStorage.removeItem('auth')
+            //     this.$store.commit('setUser', null)
+            //     this.$loggedin = false
+            //     this.$router.push('/')
+
+            // } catch(err) {
+            //     console.log(err)
+            // }
+            UserService.logout().then(() => {
                 this.$store.commit('setUser', null)
-                this.$loggedin = false
+                // this.$loggedin = false
                 this.$router.push('/')
+            })
 
-            } catch(err) {
-                console.log(err)
-            }
         }  
     },
     computed: {

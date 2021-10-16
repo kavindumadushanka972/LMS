@@ -14,7 +14,7 @@
           <input type="checkbox" value="remember-me"> Remember me
         </label>
       </div>
-      <p v-if="incorrectPassword">{{ errorMsg }}</p>
+      <p v-if="errorMsg">{{ errorMsg }}</p>
       <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
       <!-- <p class="mt-5 mb-3 text-muted">&copy; 2021</p> -->
     </form>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import UserService from '../services/UserService'
 
 export default {
   name: 'Login',
@@ -30,38 +31,42 @@ export default {
     return {
       email: '',
       password: '',
-      incorrectPassword: false,
       errorMsg: ''
     }
   },
   methods: {
     async submit() {
-      try {
-        const res = await fetch('http://localhost:5000/user/login', {
-          method: "POST",
-          mode: 'cors',
-          headers: {'Content-Type': 'application/json'},
-          credentials: 'include',
-          body: JSON.stringify({email: this.email, password: this.password})
-        })
-        const data = await res.json()
-        console.log(data)
+      // try {
+      //   const res = await fetch('http://localhost:5000/user/login', {
+      //     method: "POST",
+      //     mode: 'cors',
+      //     headers: {'Content-Type': 'application/json'},
+      //     credentials: 'include',
+      //     body: JSON.stringify({email: this.email, password: this.password})
+      //   })
+      //   const data = await res.json()
+      //   console.log(data)
 
-        if (res.status !== 200) {
-          this.incorrectPassword = true
-          this.errorMsg = data.msg
-          return
-        }
+      //   if (res.status !== 200) {
+      //     this.incorrectPassword = true
+      //     this.errorMsg = data.msg
+      //     return
+      //   }
        
        
-        // this.$store.commit('setAuth', data)
-        localStorage.auth = data
-        this.$router.push('/dashboard')
+      //   // this.$store.commit('setAuth', data)
+      //   localStorage.auth = data
+      //   this.$router.push('/dashboard')
 
-      } catch(err) {
-         this.incorrectPassword = true
-        this.errorMsg = err
-      }
+      // } catch(err) {
+      //    this.incorrectPassword = true
+      //   this.errorMsg = err
+      // }
+
+      await UserService.login(this.email, this.password)
+      .then(() => this.$router.push('/dashboard'))
+      .catch((err) => this.errorMsg = err)
+
     }
   }
 }

@@ -3,29 +3,28 @@
      <div class="container col-md-6" >
      <form class="form-signin" @submit.prevent="submit">
       <h1>i<span class="ilearn-l">L</span>earn</h1>
-      <!-- <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
       <h1 class="h3 mb-3 font-weight-normal">Singn Up for Free</h1>
       <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="firstName">First name</label>
-                <input type="text" class="form-control" name="firstName" placeholder=""  v-model="fname" required>
+                <input type="text" class="form-control" name="firstName" placeholder=""  v-model="userData.fname" required>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="lastName">Last name</label>
-                <input type="text" class="form-control" name="lastName" placeholder="" v-model="lname" required>
+                <input type="text" class="form-control" name="lastName" placeholder="" v-model="userData.lname" required>
               </div>
       </div>
 
        <div class="row">
               <div class="col-md-12 mb-3">
                 <label for="inputEmail">Email</label>
-                <input type="email" class="form-control" name="firstName" placeholder="" v-model="email" required>
+                <input type="email" class="form-control" name="firstName" placeholder="" v-model="userData.email" required>
               </div>
               <div class="col-md-12 mb-3">
                 <label for="inputPasword">Pasword</label>
-                <input type="password" name="password" class="form-control" v-model="password" placeholder="" required>
+                <input type="password" name="password" class="form-control" v-model="userData.password" placeholder="" required>
                 <label for="inputPasword">Pasword confirmation</label>
-                <input type="password" name="passwordConf" class="form-control" v-model="passwordConf" placeholder="" required>
+                <input type="password" name="passwordConf" class="form-control" v-model="userData.passwordConf" placeholder="" required>
                
                  
               </div>
@@ -34,7 +33,7 @@
       <div class="row">
         <div class="form-group col-12 select-role">
           <label for="selecteRole">What are you?</label>
-          <select v-model="role" class="form-control" aria-label="Seletect role">
+          <select v-model="userData.role" class="form-control" aria-label="Seletect role">
             <option selected value="1">Student</option>
             <option value="2">Teacher</option>
           </select>
@@ -49,49 +48,55 @@
 </template>
 
 <script>
+import UserService from '../services/UserService'
 export default {
   name: 'Register',
   data() {
     return {
-      fname: '',
-      lname: '',
-      email: '',
-      password: '',
-      passwordConf: '',
-      role: '1',
+      userData: {
+        fname: '',
+        lname: '',
+        email: '',
+        password: '',
+        passwordConf: '',
+        role: '1',
+      },
       errorMsg: ''
     }
   },
   methods: {
     async submit() {
-      try {
-        const res = await fetch('http://localhost:5000/user/register', {
-            method: "POST",
-            mode: 'cors',
-            headers: {'Content-Type': 'application/json'},
-            credentials: 'include',
-            body: JSON.stringify({
-              name: this.fname + ' ' + this.lname,
-              email: this.email, 
-              password: this.password,
-              passwordConf: this.passwordConf,
-              role: parseInt(this.role)
-            })
-        })
-        const data = await res.json()
-        console.log(data)
+      // try {
+      //   const res = await fetch('http://localhost:5000/user/register', {
+      //       method: "POST",
+      //       mode: 'cors',
+      //       headers: {'Content-Type': 'application/json'},
+      //       credentials: 'include',
+      //       body: JSON.stringify({
+      //         name: this.fname + ' ' + this.lname,
+      //         email: this.email, 
+      //         password: this.password,
+      //         passwordConf: this.passwordConf,
+      //         role: parseInt(this.role)
+      //       })
+      //   })
+      //   const data = await res.json()
+      //   console.log(data)
 
-        if (res.status !== 200) {
-          this.errorMsg = data.msg
-          return
-        }
-        this.errorMsg = ''
-        localStorage.auth = data
-        this.$router.push('/')
+      //   if (res.status !== 200) {
+      //     this.errorMsg = data.msg
+      //     return
+      //   }
+      //   this.errorMsg = ''
+      //   localStorage.auth = data
+      //   this.$router.push('/')
 
-      } catch(err) {
-        this.errorMsg = err
-      }
+      // } catch(err) {
+      //   this.errorMsg = err
+      // }
+      UserService.register(this.userData)
+      .then(() => this.$router.push('/'))
+      .catch((err) => this.errorMsg = err)
     }
   }
 }

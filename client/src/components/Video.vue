@@ -4,7 +4,7 @@
         <div class="text">
             <h3>{{ video.title }}</h3>
             <p>{{ video.description }}</p>
-            <button v-if="mode=='admin'" class="btn btn-danger delete-btn" @click="deleteVideo(video._id)"><i class="far fa-trash-alt"></i></button>
+            <button v-if="mode=='admin'" class="btn btn-danger delete-btn" @click="deleteVideo"><i class="far fa-trash-alt"></i></button>
         </div>
 
     </div>
@@ -22,7 +22,14 @@ export default {
             enum: ['viewer', 'admin']
         }
     },
-    methods: mapActions(['deleteVideo'])
+    methods: {
+        deleteVideo() {
+            if (confirm('Are you sure want to delete this video?')) {
+                this.deleteVideoStore(this.video._id)
+            }
+        },
+        ...mapActions({deleteVideoStore: 'deleteCourse'})
+    }
 }
 </script>
 

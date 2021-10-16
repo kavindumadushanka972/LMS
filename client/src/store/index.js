@@ -1,6 +1,6 @@
 import {createStore} from 'vuex'
-import { deleteCourse } from '../../../controllers/courseCtrl'
 
+import UserService from '../services/UserService'
 
 const store = createStore({
   state: {
@@ -51,38 +51,46 @@ const store = createStore({
           return
         }
         
-        const res = await fetch('http://localhost:5000/user/infor', {
-            method: "GET",
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: context.getters.authToken
-            },
-            credentials: 'include',
-        })
+        // const res = await fetch('http://localhost:5000/user/infor', {
+        //     method: "GET",
+        //     mode: 'cors',
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       Authorization: context.getters.authToken
+        //     },
+        //     credentials: 'include',
+        // })
 
-        const data = await res.json()
-        context.commit('setUser', data)
+        // const data = await res.json()
+        await UserService.getUser()
+        .then((data) => context.commit('setUser', data))
+        .catch((err) => context.commit('setUser', null))
+
+        
         // console.log(data)
       },
       async updateCourseList(context, payload) {
-          const res = await fetch('http://localhost:5000/user/enroll', {
-              method: "PATCH",
-              mode: 'cors',
-              headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: context.getters.authToken
-              },
-              credentials: 'include',
-              body: JSON.stringify({course: payload})
-          }).catch(err => {throw err})
+          // const res = await fetch('http://localhost:5000/user/enroll', {
+          //     method: "PATCH",
+          //     mode: 'cors',
+          //     headers: {
+          //         'Content-Type': 'application/json',
+          //         Authorization: context.getters.authToken
+          //     },
+          //     credentials: 'include',
+          //     body: JSON.stringify({course: payload})
+          // }).catch(err => {throw err})
 
-          if (res.status == 200) {
-              const data = await res.json()
-              context.commit('setUserCourseList', payload)
-          } else {
-            throw 'could not enroll'
-          }
+          // if (res.status == 200) {
+          //     const data = await res.json()
+          //     context.commit('setUserCourseList', payload)
+          // } else {
+          //   throw 'could not enroll'
+          // }
+          
+            await UserService.enroll(payload)
+            context.commit('setUserCourseList', payload)
+         
       },
       async fetchCourses(context, payload) {  // get courses for given id list
         context.commit('clearCourses')

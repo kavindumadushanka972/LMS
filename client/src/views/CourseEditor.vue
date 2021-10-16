@@ -25,9 +25,9 @@
           <label for="selecteCategory">Category</label>
           <select v-model="course.category" class="form-control" aria-label="Seletect category">
             <option selected value="maths">Math</option>
-            <option value="english">Programming</option>
+            <option value="programming">Programming</option>
             <option value="multimedia">Multimedia</option>
-            <option value="programming">English</option>
+            <option value="english">English</option>
             <option value="other">Other</option>
           </select>
         </div>
@@ -106,17 +106,7 @@ export default {
         this.errorMsg = err
       }
     },
-    // async fetchCourse() {
-    //     const res = await fetch(`http://localhost:5000/api/courses/${this.$route.params.id}`)
-
-    //     if (res.status != 200) {
-    //         console.log('fetch error')
-    //         return undefined
-    //     }
-
-    //     const data = await res.json()
-    //     return data
-    // },
+  
     ...mapActions(['loadUser', 'fetchCourses'])
   },
   computed: {
