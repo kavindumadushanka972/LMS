@@ -2,6 +2,7 @@ import {createStore} from 'vuex'
 import CourseService from '../services/CourseService'
 
 import UserService from '../services/UserService'
+import VideoService from '../services/VideoService'
 
 const store = createStore({
   state: {
@@ -81,21 +82,28 @@ const store = createStore({
     //     }
     // },
     async fetchVideos(context, payload) { //fetch videos for a given course id
-      const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
-        method: "GET",
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: context.getters.authToken
-        },
-        credentials: 'include',
-      })
-      if (res.status == 200) {
-        const data = await res.json()
-        console.log('data: ' + data)
-        context.commit('setVideos', data)
-      } else {
-        throw 'could not load videos'
+      // const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
+      //   method: "GET",
+      //   mode: 'cors',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: context.getters.authToken
+      //   },
+      //   credentials: 'include',
+      // })
+      // if (res.status == 200) {
+      //   const data = await res.json()
+      //   console.log('data: ' + data)
+      //   context.commit('setVideos', data)
+      // } else {
+      //   throw 'could not load videos'
+      // }
+      try {
+        const videos = await VideoService.getVideosByCourseId(payload)
+        context.commit('setVideos', videos)
+
+      } catch(err) {
+        console.log(err)
       }
       
     },
@@ -118,23 +126,31 @@ const store = createStore({
     //     }
     // }, 
     async deleteVideo(context, payload) { // delete video of given video id
-      const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
-        method: "DELETE",
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: context.getters.authToken
-        },
-        credentials: 'include',
-      })
-      if (res.status == 200) {
-        const data = await res.json()
+    //   const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
+    //     method: "DELETE",
+    //     mode: 'cors',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: context.getters.authToken
+    //     },
+    //     credentials: 'include',
+    //   })
+    //   if (res.status == 200) {
+    //     const data = await res.json()
+    //     context.commit('removeVideo', payload)
+    //     console.log(data)
+    //   } else {
+    //     throw 'could not delete video'
+    //   }
+
+      try {
+        await VideoService.deleteVideo(payload)
         context.commit('removeVideo', payload)
-        console.log(data)
-      } else {
-        throw 'could not delete video'
+      } catch(err) {
+        
       }
     }
+
   },
   getters: {
     authToken(state) {

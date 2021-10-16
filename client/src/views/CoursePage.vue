@@ -53,19 +53,19 @@ export default {
         // await this.fetchCourses([this.$route.params.id])
         const courses = await CourseService.getCoursesByIds([this.$route.params.id])
 
-        console.log(courses[0])
+        // console.log(courses[0])
         this.course = courses[0]
         // this.course = this.courses[0]
         await this.fetchVideos([this.course._id])
         console.log('vids: ' + this.videos)
         this.enrolled = this.alreadyEnrolled()
-        console.log(this.course)
+        // console.log(this.course)
     },
     methods: {
         async enroll() {
             try {
-                const newCourseList = Object.values(this.user.courses)
-                newCourseList.push(this.course._id)
+                // const newCourseList = Object.values(this.user.courses)
+                // newCourseList.push(this.course._id)
                 // this.$store.dispatch('updateCourseList', newCourseList)
                 // .then(() => this.enrolled = true)
                 // .catch(console.log)

@@ -1,6 +1,37 @@
 <template>
     <div class="video col-12">
-        <iframe height="370" width="420" :src="video.link"></iframe>
+        <!-- <iframe height="370" width="420" :src="video.link"></iframe> -->
+       <!-- <vue-plyr>
+            <div class="plyr__video-embed">
+                <iframe
+                :src="video.link"
+                allowfullscreen
+                allowtransparency
+                allow="autoplay"
+                ></iframe>
+            </div>
+        </vue-plyr> -->
+        <vue-plyr>
+        <video
+            controls
+            crossorigin
+            playsinline
+            data-poster="poster.jpg"
+        >
+            <source
+            size="720"
+            :src="video.link"
+            type="video/mp4"
+            />
+            <source
+            size="1080"
+            :src="video.link"
+            type="video/mp4"
+            />
+          
+        </video>
+        </vue-plyr>
+
         <div class="text">
             <h3>{{ video.title }}</h3>
             <p>{{ video.description }}</p>
@@ -12,6 +43,7 @@
 
 <script>
 import {mapActions} from 'vuex'
+// import VuePlyr from 'vue-plyr'
 
 export default {
     name: 'Video',
@@ -22,13 +54,24 @@ export default {
             enum: ['viewer', 'admin']
         }
     },
+    data() {
+        return {
+        options: {
+          title: "This is an example video", 
+          playsinline: true,
+          volume: 10, 
+          controls: ['play', 'play-small'],
+          debug: false
+      }
+        }
+    },
     methods: {
         deleteVideo() {
             if (confirm('Are you sure want to delete this video?')) {
                 this.deleteVideoStore(this.video._id)
             }
         },
-        ...mapActions({deleteVideoStore: 'deleteCourse'})
+        ...mapActions({deleteVideoStore: 'deleteVideo'})
     }
 }
 </script>
@@ -41,7 +84,7 @@ export default {
 }
 iframe {
     width: 100%;
-    /* height: 20rem; */
+    /* height: 30rem; */
 }
 .text {
     text-align: left;

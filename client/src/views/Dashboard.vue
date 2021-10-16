@@ -5,10 +5,8 @@
                 <img class="profile-pic" src="@/assets/default-profile-pic.png" alt="user.name">
                 <h2>{{ 'Hi, ' + fname}}</h2>
                 <p>{{ user.email }}</p>
-                <h4>{{ roleStr }}</h4>
-                
+                <h4>{{ roleStr }}</h4>               
                 <p>number of courses  {{ courses.length }}</p>
-
             </div>
             <div class="col-lg-9 main-col">
                 <div v-if="user.role==1">
@@ -26,7 +24,6 @@
                     <div class="row courses">
                         <Course :key="course.id" v-for="course in courses" :course="course" :mode="'teacher'"/>
                     </div>
-
                 </div>
             </div>
         </div>

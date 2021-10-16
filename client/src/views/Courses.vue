@@ -35,12 +35,14 @@ export default {
         }
     },
     async mounted() {
+
         if (this.$route.query.page) {
             this.page = parseInt(this.$route.query.page)
+            
         } else {
             this.page = 1
         }
-        this.courses = await CourseService.getCoursesByQuery(this.$route.query.param)
+        this.courses = await CourseService.getCoursesByQuery(this.$route.query)
     //    console.log(localStorage.auth)
 
     },
@@ -59,12 +61,12 @@ export default {
         // },
         async nextPage() {
             this.page++
-            // this.$router.push({query: {page: this.page}})
+            this.$router.push({query: {page: this.page}})
             this.courses = await CourseService.getCoursesByQuery({page: this.page})
         },
         async prevPage() {
             this.page--
-            // this.$router.push({query: {page: this.page}})
+            this.$router.push({query: {page: this.page}})
             this.courses = await CourseService.getCoursesByQuery({page: this.page})
         },
         async search(searchData) {

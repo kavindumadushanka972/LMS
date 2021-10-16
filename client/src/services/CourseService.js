@@ -122,7 +122,6 @@ class CourseService {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await fetch(`http://localhost:5000/api/courses?${new URLSearchParams(query)}`)
-                console.log(`http://localhost:5000/api/courses?${new URLSearchParams(query)}`)
                 const data = await res.json()
 
                 if (res.status != 200) {
