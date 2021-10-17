@@ -34,14 +34,21 @@
 
          <div v-if="enrolled || isCourseOwner" class="col-md-4 video-container">
             <h4>{{ videos.length > 0 ? 'Watch Course Videos' : 'No Videos Yet' }}</h4>
-            <div :class="['video-tag', 'row',isVideoSelected(video)? 'video-tag-selected':'']" 
+
+            <!-- <div :class="['video-tag', 'row',isVideoSelected(video)? 'video-tag-selected':'']" 
                 :key="video._id" v-for="(video, index) in videos" :video="video" >
                 <p @click="setVideoMode(video)" class="col-11 truncated-text">{{ `${index + 1}. ${video.title}` }}</p>
                 <div v-if="isCourseOwner" @click="deleteVideo(video)" class="delete-btn col-1">
                     <i  class="far fa-trash-alt"></i>
                 </div>
 
-            </div>
+            </div> -->
+             <ListItem :key="video._id" v-for="(video, index) in videos" :name="video.title" :index="index+1"
+                                @handle_delete="deleteVideo(video)"
+                                @handle_click="setVideoMode(video)"
+                                :showDeleteButton="isCourseOwner"
+                                :showEditButton="isCourseOwner"
+                                :selected="isVideoSelected(video)"/>
         </div>
       
     </div>
@@ -52,11 +59,13 @@ import {mapState, mapActions} from 'vuex'
 import Video from '../components/Video'
 import CourseService from '../services/CourseService'
 import UserService from '../services/UserService'
+import ListItem from '../components/ListItem'
 
 export default {
     name: 'CoursePage',
     components: {
-        Video
+        Video,
+        ListItem
     },
     data() {
         return {
@@ -178,36 +187,5 @@ p {
     margin-top: 50px;
     text-align: center;
 }
-.video-tag {
-    position: relative;
-    border: 3px solid #e5e5e5;
-    /* background-color: #e5e5e5; */
-    padding: 5px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    cursor: pointer;
-    /* height: 4rem; */
-}
-.video-tag p {
-    text-align: left;
-    padding: 0.6rem 5px;
-    margin: 0;
-}
-.video-tag:hover {
-    border-color: #A0E7E5;
-}
-.video-tag .delete-btn {
-    font-size: 1rem;
-    padding: 0.6rem 5px;
-    margin: 0;
-} 
-.video-tag .delete-btn:hover {
-    color: red;
-}
-.video-tag-selected{
-    border-color: blue;
-}
-.video-tag-selected:hover {
-    border-color: blue;
-}
+
 </style>

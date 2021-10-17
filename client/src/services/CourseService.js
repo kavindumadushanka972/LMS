@@ -43,10 +43,7 @@ class CourseService {
                 }  
                
                 resolve(data)
-               
-                // console.log('5 ' + this.$store.state.courses)
-                // // this.courses = data
-                // console.log(this.courses[0])
+        
             } catch(err) {
                 reject(err)
             }

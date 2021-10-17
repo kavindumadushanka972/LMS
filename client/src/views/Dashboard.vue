@@ -28,11 +28,15 @@
                 </div>
 
                 <div v-if="user.role===3" class="row">
-                    <div class="col-sm-6">
+                    <div class="col-md-6">
                         <h3>Categories</h3>
-                        <ul style="text-align: left">
-                            <li :key="category._id" v-for="category in categories">{{ category.name }}</li>
-                        </ul>
+                       
+                            <ListItem :key="category._id" v-for="(category, index) in categories" :name="category.name" :index="index+1"
+                                @handle_delete="deleteCategory(category)"
+                                :showDeleteButton="true"
+                                :showEditButton="true"/>
+                        
+                        <button class="btn btn-info col-12">+ Add Cetegory</button>
                     </div>
                 </div>
             </div>
@@ -45,11 +49,13 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import Course from '../components/Course'
 import CourseService from '../services/CourseService'
 import CategoryService from '../services/CategoryService'
+import ListItem from '../components/ListItem'
 
 export default {
     name: 'Dashboard',
     components: {
-        Course
+        Course,
+        ListItem
     },
     data() {
         return {
@@ -139,6 +145,9 @@ export default {
                 // Toast
             }
 
+        },
+        deleteCategory(category) {
+            console.log(category)
         },
         ...mapMutations(['setCourseList', 'clearCourses', 'insertCourse']),
         ...mapActions(['fetchCourses', 'fetchCategories'])
