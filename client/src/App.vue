@@ -36,4 +36,9 @@ h1, h2, h3, h4 {
 a:hover {
   text-decoration: none;
 }
+.truncated-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

@@ -3,7 +3,7 @@
      <form class="form-control" @submit.prevent="$emit('do_search', search)">
           <div class="row">
             <div class="col-lg-3">
-              <input v-model="search.keyword" class="form-control form-control-sm" placeholder="Enter keyword">
+              <input v-model="search.keyword"  class="form-control form-control-sm" placeholder="Enter keyword">
             </div>
             <!-- <div class="col-lg-1">
               <label for="selecteCategory">Category</label>
@@ -11,15 +11,16 @@
             <div class="col-lg-2 col-sm-6">
               <select v-model="search.category" class="form-control form-control-sm category-select" aria-label="Seletect category">
                 <option selected value="" >Any category</option>
-                <option value="maths">Math</option>
+                <!-- <option value="maths">Math</option>
                 <option value="programming">Programming</option>
                 <option value="multimedia">Multimedia</option>
                 <option value="english">English</option>
-                <option value="other">Other</option>
+                <option value="other">Other</option> -->
+                <option :key="category._id" v-for="category in categories" :value="category.name">{{ category.name }}</option>
               </select>
             </div>
             <div class="col-lg-2 col-sm-6">
-              <select v-model="search.sort" class="form-control form-control-sm sort-select" aria-label="Seletect sort">
+              <select v-model="search.sort" class="form-control form-control-sm sort-select" aria-label="Seletect sort" >
                 <option selected value="-createdAt">Latest first</option>
                 <option value="-enrolled_number">Trending first</option>
                 <option selected value="createdAt">Oldest first</option>
@@ -34,6 +35,8 @@
 </template>
 
 <script>
+import {mapState, mapActions} from 'vuex'
+
 export default {
   name: 'CourseSelect',
   data() {
@@ -45,8 +48,14 @@ export default {
       }
     }
   },
+  async mounted() {
+    await this.fetchCategories()
+  },
   methods: {
-  
+    ...mapActions(['fetchCategories'])
+  },
+  computed: {
+      ...mapState(['user', 'categories'])
   }
 }
 </script>

@@ -37,7 +37,7 @@
 
         <div class="text">
             <p>{{ video.description }}</p>
-            <button v-if="mode=='admin'" class="btn btn-danger delete-btn" @click="deleteVideo"><i class="far fa-trash-alt"></i></button>
+            <!-- <button v-if="mode=='admin'" class="btn btn-danger delete-btn" @click="deleteVideo"><i class="far fa-trash-alt"></i></button> -->
         </div>
 
     </div>
@@ -50,30 +50,7 @@ import {mapActions} from 'vuex'
 export default {
     name: 'Video',
     props: {
-        video: null,
-        mode: {
-            default: 'viewer',
-            enum: ['viewer', 'admin']
-        }
-    },
-    data() {
-        return {
-            options: {
-                title: "This is an example video", 
-                playsinline: true,
-                volume: 10, 
-                controls: ['play', 'play-small'],
-                debug: false
-            }
-        }
-    },
-    methods: {
-        deleteVideo() {
-            if (confirm('Are you sure want to delete this video?')) {
-                this.deleteVideoStore(this.video._id)
-            }
-        },
-        ...mapActions({deleteVideoStore: 'deleteVideo'})
+        video: null
     }
 }
 </script>

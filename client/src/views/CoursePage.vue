@@ -1,8 +1,6 @@
 <template>
-    <div class="container col-lg-7" v-if="course">
-       
-        
-        <div v-if="!videoMode">
+    <div class="course-page row" v-if="course">
+        <div v-if="!videoMode" class="col-md-8">
             <h1>{{ course.title }}</h1>
             <h5>by {{ course.owner_name }}</h5>
             <img class="main-img" :src="course.image_url" :alt="course.title"/>
@@ -26,19 +24,24 @@
             <div v-else>
                 <button class="btn btn-primary" @click="$router.push('/login')">Login to Enroll</button>
             </div>
-            <div v-if="enrolled || isCourseOwner" class="video-container">
-                <h2>{{ videos.length > 0 ? 'Watch Course Videos' : 'No Videos Yet' }}</h2>
-                <!-- <Video :key="video._id" v-for="video in videos" :video="video" :mode="isCourseOwner? 'admin' : 'viewer'"/> -->
-                <div class="video-tag" :key="video._id" v-for="(video, index) in videos" :video="video" @click="setVideoMode(video)">
-                    <!-- <router-link :to="`course/${course._id}/${video._id}`">{{video.title}}</router-link> -->
-                    <p>{{ `${index + 1}. ${video.title}` }}</p>
-                </div>
-            </div>
+           
         </div>
-        <div v-else>
+        <div v-else class="col-md-8">
             <button class="btn btn-dark btn-sm" @click="setCourseMode"><i class="fas fa-arrow-left"></i> Back to course home</button>
             <h1>{{ `${course.title}: ${currentVideo.title}` }}</h1>
-            <Video :video="currentVideo" :mode="isCourseOwner? 'admin' : 'viewer'"/>
+            <Video :video="currentVideo"/>
+        </div>
+
+         <div v-if="enrolled || isCourseOwner" class="col-md-4 video-container">
+            <h4>{{ videos.length > 0 ? 'Watch Course Videos' : 'No Videos Yet' }}</h4>
+            <div :class="['video-tag', 'row',isVideoSelected(video)? 'video-tag-selected':'']" 
+                :key="video._id" v-for="(video, index) in videos" :video="video" >
+                <p @click="setVideoMode(video)" class="col-11 truncated-text">{{ `${index + 1}. ${video.title}` }}</p>
+                <div v-if="isCourseOwner" @click="deleteVideo(video)" class="delete-btn col-1">
+                    <i  class="far fa-trash-alt"></i>
+                </div>
+
+            </div>
         </div>
       
     </div>
@@ -120,6 +123,21 @@ export default {
             this.videoMode = false 
             this.currentVideo = null
         },
+        async deleteVideo(video) {   
+                console.log(this.currentVideo._id, video._id)
+
+
+            if (confirm('Are you sure want to delete this video?')) {
+                 if (this.currentVideo && this.currentVideo._id === video._id) {
+                    this.setCourseMode()
+                }
+                this.deleteVideoStore(video._id)
+            }
+        },
+        isVideoSelected(video) {
+            return this.currentVideo && this.currentVideo._id === video._id
+        },
+        ...mapActions({deleteVideoStore: 'deleteVideo'}),
         ...mapActions(['fetchCourses', 'fetchVideos']),
         ...mapActions({deleteCourseStore: 'deletecCourse'})
     },
@@ -130,13 +148,14 @@ export default {
             }
             return this.user.role == 2 && this.course.owner_id == this.user._id
         },
+        
         ...mapState(['user', 'courses', 'videos'])
     }
 }
 </script>
 
 <style scoped>
-.container {
+.course-page {
     text-align: left;
     padding: 20px 20px 60px 20px;
 }
@@ -160,6 +179,7 @@ p {
     text-align: center;
 }
 .video-tag {
+    position: relative;
     border: 3px solid #e5e5e5;
     /* background-color: #e5e5e5; */
     padding: 5px;
@@ -170,9 +190,24 @@ p {
 }
 .video-tag p {
     text-align: left;
-    margin: 10px 5px;
+    padding: 0.6rem 5px;
+    margin: 0;
 }
 .video-tag:hover {
     border-color: #A0E7E5;
+}
+.video-tag .delete-btn {
+    font-size: 1rem;
+    padding: 0.6rem 5px;
+    margin: 0;
+} 
+.video-tag .delete-btn:hover {
+    color: red;
+}
+.video-tag-selected{
+    border-color: blue;
+}
+.video-tag-selected:hover {
+    border-color: blue;
 }
 </style>

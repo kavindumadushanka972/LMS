@@ -15,6 +15,17 @@ class UploadSearvice {
         })
     }
 
+    static uploadVideo(file) {
+        return new Promise(async (resolve, reject) => {
+            try {          
+                const data = await this.uploadFile(file, `${url}uploadvideo`)
+                resolve(data)
+            } catch(err) {
+                reject(err)
+            }
+        })
+    }
+
     static uploadFile(file, uploadUrl) {
         return new Promise(async (resolve, reject) => {
             try {

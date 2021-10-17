@@ -17,11 +17,14 @@
                 COURSES
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'maths', page: 1}}">Maths</router-link>
+                <!-- <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'maths', page: 1}}">Maths</router-link>
                 <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'programming', page: 1}}">Programming</router-link>
                 <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'multimedia', page: 1}}">Multimedia</router-link>
                 <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'english', page: 1}}">English</router-link>
-                <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'other', page: 1}}">Other</router-link>
+                <router-link class="dropdown-item" :to="{name: 'Courses', query: {category: 'other', page: 1}}">Other</router-link> -->
+
+                <router-link :key="category._id" v-for="category in categories" class="dropdown-item" :to="{name: 'Courses', query: {category: category.name, page: 1}}">{{ category.name }}</router-link>
+
 
                 <div class="dropdown-divider"></div>
                 <router-link class="dropdown-item" :to="{name: 'Courses', query: {page: 1}}">All</router-link>
@@ -44,7 +47,7 @@
 </template>
 
 <script>
-import {mapGetters, mapState, mapMutations} from 'vuex'
+import {mapGetters, mapState, mapMutations, mapActions} from 'vuex'
 import UserService from '../services/UserService'
 
 export default {
@@ -55,8 +58,9 @@ export default {
         }
     },
     async mounted() {
-        await this.$store.dispatch('loadUser')
+        await this.loadUser()
         this.loggedin = this.user != null
+        await this.fetchCategories()
     },
     methods: {
         async logout() {
@@ -94,11 +98,12 @@ export default {
                 this.$router.push('/')
             })
 
-        }  
+        },
+        ...mapActions(['loadUser', 'fetchCategories']) 
     },
     computed: {
         // ...mapGetters(['authenticated']),
-        ...mapState(['user'])
+        ...mapState(['user', 'categories'])
     }
     
     

@@ -33,6 +33,7 @@
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex'
 import Video from '../components/Video'
+import VideoService from '../services/VideoService'
 
 export default {
   name: 'VideoEditor',
@@ -63,39 +64,48 @@ export default {
   },
   methods: {
     async submit() {
-      try {
-        let method = 'POST'
-        let url = `http://localhost:5000/api/videos/${this.$route.params.courseid}`
-        // if (this.$route.params.id) {
-        //     method = 'PUT'
-        //     url += '/' + this.$route.params.id
-        // }
-        const res = await fetch(url, {
-            method: method,
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.authToken
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                ...this.video,
-                public_id: '0',
+      // try {
+      //   let method = 'POST'
+      //   let url = `http://localhost:5000/api/videos/${this.$route.params.courseid}`
+      //   // if (this.$route.params.id) {
+      //   //     method = 'PUT'
+      //   //     url += '/' + this.$route.params.id
+      //   // }
+      //   const res = await fetch(url, {
+      //       method: method,
+      //       mode: 'cors',
+      //       headers: {
+      //           'Content-Type': 'application/json',
+      //           Authorization: this.authToken
+      //       },
+      //       credentials: 'include',
+      //       body: JSON.stringify({
+      //           ...this.video,
+      //           public_id: '0',
                 
-            })
-        })
-        const data = await res.json()
-        console.log(data)
+      //       })
+      //   })
+      //   const data = await res.json()
+      //   console.log(data)
 
-        if (res.status !== 200) {
-          this.errorMsg = data.msg
-          return
-        }
-        this.errorMsg = ''
-        this.$router.push('/')
+      //   if (res.status !== 200) {
+      //     this.errorMsg = data.msg
+      //     return
+      //   }
+      //   this.errorMsg = ''
+      //   this.$router.push('/')
 
+      // } catch(err) {
+      //   this.errorMsg = err
+      // }
+
+      try {
+        await VideoService.createVideo(this.video, this.$route.params.courseid)
+        this.$router.push(`/course/${this.$route.params.courseid}`)
+        
       } catch(err) {
         this.errorMsg = err
+        console.log(err)
       }
     },
   

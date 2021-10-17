@@ -6,23 +6,33 @@
                 <h2>{{ 'Hi, ' + fname}}</h2>
                 <p>{{ user.email }}</p>
                 <h4>{{ roleStr }}</h4>               
-                <p>number of courses  {{ courses.length }}</p>
+                <p v-if="user.role!==3">number of courses  {{ courses.length }}</p>
             </div>
             <div class="col-lg-9 main-col">
-                <div v-if="user.role==1">
+                <div v-if="user.role===1">
                     <h3>Enrolled courses</h3>
                     <div class="row courses">
                         <Course :key="course.id" v-for="course in courses" :course="course" :mode="'student'"/>
                     </div>
                     <p v-if="!courses.length">you don't have any course <router-link to="/courses">Browes courses</router-link></p>
                 </div>
-                <div v-if="user.role==2">
+
+                <div v-if="user.role===2">
                      <h3>Courses by You</h3>
                      <div class="options">
                         <button class="btn btn-info" @click="$router.push('/course-editor')"><b>+</b> New</button>
                      </div>
                     <div class="row courses">
                         <Course :key="course.id" v-for="course in courses" :course="course" :mode="'teacher'"/>
+                    </div>
+                </div>
+
+                <div v-if="user.role===3" class="row">
+                    <div class="col-sm-6">
+                        <h3>Categories</h3>
+                        <ul style="text-align: left">
+                            <li :key="category._id" v-for="category in categories">{{ category.name }}</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -34,6 +44,7 @@
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import Course from '../components/Course'
 import CourseService from '../services/CourseService'
+import CategoryService from '../services/CategoryService'
 
 export default {
     name: 'Dashboard',
@@ -51,7 +62,8 @@ export default {
             this.$router.push('/')
         }
         await this.fetchUserCourses()
-        console.log('c: ' + this.user.courses[0])
+
+        await this.fetchCategories()
     },
     computed: {
         fname() {
@@ -61,7 +73,7 @@ export default {
             const roles = ['Student', 'Teacher', 'Admin']
             return roles[this.user.role - 1]
         },
-        ...mapState(['user', 'courses']),
+        ...mapState(['user', 'courses', 'categories']),
         ...mapGetters(['authenticated'])
     },
     methods: {
@@ -129,7 +141,7 @@ export default {
 
         },
         ...mapMutations(['setCourseList', 'clearCourses', 'insertCourse']),
-        ...mapActions(['fetchCourses'])
+        ...mapActions(['fetchCourses', 'fetchCategories'])
     }
 }
 </script>

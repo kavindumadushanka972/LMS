@@ -1,5 +1,5 @@
 <template>
-    <div :class="['course', 'align-self-left', mode=='common'?'col-lg-3 col-md-4 col-sm-6':'col-md-4']">
+    <div :class="['course', 'align-self-left', 'truncated-text', mode=='common'?'col-lg-3 col-md-4 col-sm-6':'col-md-4']">
         <div class="border">
             <img :src="course.image_url" @click="$router.push(`/course/${course._id}`)" :alt="course.title"/>
             <div class="details">
@@ -52,6 +52,7 @@ export default {
     text-align: left;
     margin-bottom: 30px;
     padding: 10px 25px;
+    overflow: hidden;
 } 
 .border {
     background-color: #e5e5e5;

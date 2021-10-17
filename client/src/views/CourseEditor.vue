@@ -21,8 +21,6 @@
             <p v-if="uploading"> <b>uploading...</b></p>
         </div>
 
-
-
         <div class="image-section section">
             <img :src="course.image_url"/>
         </div>
@@ -30,11 +28,12 @@
          <div class="form-group select-category section">
           <label for="selecteCategory">Category</label>
           <select v-model="course.category" class="form-control" aria-label="Seletect category">
-            <option selected value="maths">Math</option>
+            <!-- <option selected value="maths">Math</option>
             <option value="programming">Programming</option>
             <option value="multimedia">Multimedia</option>
             <option value="english">English</option>
-            <option value="other">Other</option>
+            <option value="other">Other</option> -->
+            <option :key="category._id" v-for="category in categories" :value="category.name">{{ category.name }}</option>
           </select>
         </div>
                
@@ -70,6 +69,7 @@ export default {
     }
   },
   async mounted() {
+    this.fetchCategories()
     await this.loadUser()
       if (this.authenticated && this.user.role === 2) {
         if (this.$route.params.id) {
@@ -141,11 +141,11 @@ export default {
       }
     },
   
-    ...mapActions(['loadUser'])
+    ...mapActions(['loadUser', 'fetchCategories'])
   },
   computed: {
       ...mapGetters(['authenticated']),
-      ...mapState(['user', 'courses'])
+      ...mapState(['user', 'courses', 'categories'])
   }
 }
 </script>

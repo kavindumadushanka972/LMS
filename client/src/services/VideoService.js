@@ -27,6 +27,37 @@ class VideoService {
         })
     }
 
+    static createVideo(videoData, courseId) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await fetch(`${url}${courseId}`, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization:  localStorage.getItem('auth')
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        ...videoData,
+                        public_id: '0',
+                        
+                    })
+                })
+                const data = await res.json()
+        
+                if (res.status !== 200) {
+                  reject(data.msg)
+                }
+                
+                resolve()
+        
+              } catch(err) {
+                reject(err)
+              }
+        })
+    }
+
     static deleteVideo(videoId) {
         return new Promise(async (resolve, reject) => {
             try {

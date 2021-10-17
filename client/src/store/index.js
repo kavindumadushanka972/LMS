@@ -1,4 +1,5 @@
 import {createStore} from 'vuex'
+import CategoryService from '../services/CategoryService'
 import CourseService from '../services/CourseService'
 
 import UserService from '../services/UserService'
@@ -8,7 +9,8 @@ const store = createStore({
   state: {
     user: null,
     courses: [],
-    videos: []
+    videos: [],
+    categories: []
   },
   mutations: {
     setUser(state, payload) {
@@ -39,6 +41,15 @@ const store = createStore({
     },
     removeVideo(state, payload) {
       state.videos = state.videos.filter((video) => video._id != payload)
+    },
+    setCategories(state, payload) {
+      state.categories = payload
+    },
+    addCategory(state, payload) {
+      state.categories.push(payload)
+    },
+    removeCategory(state, payload) {
+      state.categories = state.categories.filter((elem) => elem._id !== payload)
     }
   },
   actions: {
@@ -148,6 +159,19 @@ const store = createStore({
         context.commit('removeVideo', payload)
       } catch(err) {
         
+      }
+    },
+    async fetchCategories(context) {
+      if (context.state.categories.length > 0) {
+        return
+      }
+
+      try {
+        const categories = await CategoryService.getCategories()
+        context.commit('setCategories', categories)
+
+      } catch(err) {
+        console.log(err)
       }
     }
 
