@@ -18,7 +18,6 @@ class VideoService {
                 if (res.status != 200) {
                     reject(data.msg)
                 } 
-                console.log(data)
                 
                 resolve(data)
 

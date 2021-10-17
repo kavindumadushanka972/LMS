@@ -20,7 +20,7 @@
         <div v-if="video.link !== ''" class="preview section">
            <Video :video="video"/>
         </div>
-       
+       <input name="foo" type="file" />
         <div class="section">
             <p v-if="errorMsg != ''">{{ errorMsg }}</p>
             <button class="btn btn-lg btn-dark btn-block" type="submit">Save</button>

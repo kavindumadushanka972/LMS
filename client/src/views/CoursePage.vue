@@ -1,31 +1,44 @@
 <template>
     <div class="container col-lg-7" v-if="course">
-        <h1>{{ course.title }}</h1>
-        <h5>by {{ course.owner_name }}</h5>
-        <img class="main-img" :src="course.image_url" :alt="course.title"/>
-        <p>{{ course.description }}</p>
-        <p>Category: <b>{{ course.category }}</b></p>
-        <p>Enrolled number: <b>{{ course.enrolled_number }}</b></p>
-        <div v-if="user">
-            <div v-if="user.role==1">
-                <div v-if="!enrolled">
-                    <button class="btn btn-primary" @click="enroll">Enroll Now</button>
-                    <button class="btn btn-outline-dark">Add to Wishlist</button>
+       
+        
+        <div v-if="!videoMode">
+            <h1>{{ course.title }}</h1>
+            <h5>by {{ course.owner_name }}</h5>
+            <img class="main-img" :src="course.image_url" :alt="course.title"/>
+            <p>{{ course.description }}</p>
+            <p>Category: <b>{{ course.category }}</b></p>
+            <p>Enrolled number: <b>{{ course.enrolled_number }}</b></p>
+            <div v-if="user">
+                <div v-if="user.role==1">
+                    <div v-if="!enrolled">
+                        <button class="btn btn-primary" @click="enroll">Enroll Now</button>
+                        <button class="btn btn-outline-dark">Add to Wishlist</button>
+                    </div>
+                    <h4 v-else>Enrolled</h4>
                 </div>
-                <h4 v-else>Enrolled</h4>
+                <div v-else-if="isCourseOwner">
+                    <button class="btn btn-outline-dark" @click="$router.push(`/course-editor/${course._id}`)">Edit Course</button>
+                    <button class="btn btn-info" @click="$router.push(`/video-editor/${course._id}`)">+ Add Video</button>
+                    <button class="btn btn-danger" @click="deleteCourse">Delete Course</button>
+                </div>
             </div>
-            <div v-else-if="isCourseOwner">
-                <button class="btn btn-outline-dark" @click="$router.push(`/course-editor/${course._id}`)">Edit Course</button>
-                <button class="btn btn-info" @click="$router.push(`/video-editor/${course._id}`)">+ Add Video</button>
-                <button class="btn btn-danger" @click="deleteCourse">Delete Course</button>
+            <div v-else>
+                <button class="btn btn-primary" @click="$router.push('/login')">Login to Enroll</button>
+            </div>
+            <div v-if="enrolled || isCourseOwner" class="video-container">
+                <h2>{{ videos.length > 0 ? 'Watch Course Videos' : 'No Videos Yet' }}</h2>
+                <!-- <Video :key="video._id" v-for="video in videos" :video="video" :mode="isCourseOwner? 'admin' : 'viewer'"/> -->
+                <div class="video-tag" :key="video._id" v-for="(video, index) in videos" :video="video" @click="setVideoMode(video)">
+                    <!-- <router-link :to="`course/${course._id}/${video._id}`">{{video.title}}</router-link> -->
+                    <p>{{ `${index + 1}. ${video.title}` }}</p>
+                </div>
             </div>
         </div>
         <div v-else>
-            <button class="btn btn-primary" @click="$router.push('/login')">Login to Enroll</button>
-        </div>
-        <div v-if="enrolled || isCourseOwner" class="video-container">
-            <h2>{{ videos.length > 0 ? 'Watch Course Videos' : 'No Videos Yet' }}</h2>
-            <Video :key="video._id" v-for="video in videos" :video="video" :mode="isCourseOwner? 'admin' : 'viewer'"/>
+            <button class="btn btn-dark btn-sm" @click="setCourseMode"><i class="fas fa-arrow-left"></i> Back to course home</button>
+            <h1>{{ `${course.title}: ${currentVideo.title}` }}</h1>
+            <Video :video="currentVideo" :mode="isCourseOwner? 'admin' : 'viewer'"/>
         </div>
       
     </div>
@@ -46,6 +59,8 @@ export default {
         return {
             course: null,
             enrolled: false,
+            videoMode: false,
+            currentVideo: null
         }
     },
     async mounted() {
@@ -97,6 +112,14 @@ export default {
                 // Toast
             }
         },
+        setVideoMode(video) {
+            this.currentVideo = video
+            this.videoMode = true 
+        },
+        setCourseMode() {
+            this.videoMode = false 
+            this.currentVideo = null
+        },
         ...mapActions(['fetchCourses', 'fetchVideos']),
         ...mapActions({deleteCourseStore: 'deletecCourse'})
     },
@@ -114,13 +137,11 @@ export default {
 
 <style scoped>
 .container {
-    padding-left: 20px;
-    padding-right: 20px;
     text-align: left;
-    padding-bottom: 60px;
+    padding: 20px 20px 60px 20px;
 }
 h1 {
-    margin-top: 30px;
+    margin-top: 10px;
     margin-bottom: 5px;
 }
 .main-img {
@@ -138,5 +159,20 @@ p {
     margin-top: 50px;
     text-align: center;
 }
-
+.video-tag {
+    border: 3px solid #e5e5e5;
+    /* background-color: #e5e5e5; */
+    padding: 5px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    /* height: 4rem; */
+}
+.video-tag p {
+    text-align: left;
+    margin: 10px 5px;
+}
+.video-tag:hover {
+    border-color: #A0E7E5;
+}
 </style>

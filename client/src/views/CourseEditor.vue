@@ -13,9 +13,15 @@
       </div>
 
         <div class="section">
-            <label for="imageURL">Image URL</label>
-            <input type="text" class="form-control" placeholder="" v-model="course.image_url" required>
+            <label for="image">Image</label>
+             <div class="custom-file">
+              <input type="file" class="custom-file-input" @change="handleFileUpload" id="customFile">
+              <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+            <p v-if="uploading"> <b>uploading...</b></p>
         </div>
+
+
 
         <div class="image-section section">
             <img :src="course.image_url"/>
@@ -31,7 +37,9 @@
             <option value="other">Other</option>
           </select>
         </div>
-       
+               
+              
+
         <div class="section">
             <p v-if="errorMsg != ''">{{ errorMsg }}</p>
             <button class="btn btn-lg btn-dark btn-block" type="submit">Save</button>
@@ -44,6 +52,7 @@
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex'
 import CourseService from '../services/CourseService'
+import UploadService from '../services/UploadService'
 
 export default {
   name: 'CourseEditor',
@@ -54,8 +63,10 @@ export default {
             description: '',
             category: 'maths',
             image_url: '',
+            image_public_id: ''
         },
-        errorMsg: ''     
+        errorMsg: '',
+        uploading: false  
     }
   },
   async mounted() {
@@ -111,6 +122,22 @@ export default {
         this.$router.push('/dashboard')
       } catch(err) {
         // Toast 
+        console.log(err)
+      }
+    },
+    async handleFileUpload(event) {
+      try {
+        this.uploading = true
+        const data = await UploadService.uploadImage(event.target.files[0])
+        console.log(data)
+        this.course.image_url = data.url
+        this.course.image_public_id = data.public_id
+        this.uploading = false
+
+
+      } catch(err) {
+        this.uploading = true
+        this.errorMsg = err
       }
     },
   
@@ -132,7 +159,6 @@ export default {
   background-color: #A0E7E5;
   position: relative;
   top: 0;
-
 }
 .section {
     margin-top: 40px;
@@ -203,5 +229,8 @@ label {
     margin-top: 40px;
     margin-bottom: 5px;
     font-weight: 600;
+}
+.custom-file-label {
+  font-weight: 400;
 }
 </style>

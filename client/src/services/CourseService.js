@@ -100,7 +100,7 @@ class CourseService {
                     credentials: 'include',
                     body: JSON.stringify({
                         ...courseData,
-                        image_public_id: '0'
+                        // image_public_id: '0'
                     })
                 })
 

@@ -1,5 +1,8 @@
 <template>
     <div class="video col-12">
+        <!-- <div class="text">
+            <h3>{{ video.title }}</h3>
+        </div> -->
         <!-- <iframe height="370" width="420" :src="video.link"></iframe> -->
        <!-- <vue-plyr>
             <div class="plyr__video-embed">
@@ -33,7 +36,6 @@
         </vue-plyr>
 
         <div class="text">
-            <h3>{{ video.title }}</h3>
             <p>{{ video.description }}</p>
             <button v-if="mode=='admin'" class="btn btn-danger delete-btn" @click="deleteVideo"><i class="far fa-trash-alt"></i></button>
         </div>
@@ -56,13 +58,13 @@ export default {
     },
     data() {
         return {
-        options: {
-          title: "This is an example video", 
-          playsinline: true,
-          volume: 10, 
-          controls: ['play', 'play-small'],
-          debug: false
-      }
+            options: {
+                title: "This is an example video", 
+                playsinline: true,
+                volume: 10, 
+                controls: ['play', 'play-small'],
+                debug: false
+            }
         }
     },
     methods: {
@@ -88,8 +90,9 @@ iframe {
 }
 .text {
     text-align: left;
-    width: 70%;
+    /* width: 70%; */
     margin-right: 0;
+    margin-top: 50px;
     /* display: inline-block; */
 }
 .delete-button {
