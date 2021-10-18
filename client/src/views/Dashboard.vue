@@ -50,6 +50,7 @@ import Course from '../components/Course'
 import CourseService from '../services/CourseService'
 import CategoryService from '../services/CategoryService'
 import ListItem from '../components/ListItem'
+import UserService from '../services/UserService'
 
 export default {
     name: 'Dashboard',
@@ -63,6 +64,7 @@ export default {
         }
     },
     async mounted() {
+        await UserService.refreshToken()
         await this.$store.dispatch('loadUser')
         if (!this.user) {
             this.$router.push('/')

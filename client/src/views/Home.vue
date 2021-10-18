@@ -48,6 +48,7 @@ import Header from '../components/Header'
 import Course from '../components/Course'
 import {mapState, mapGetters} from 'vuex'
 import CourseService from '../services/CourseService'
+import UserService from '../services/UserService'
 
 
 export default {

@@ -1,31 +1,37 @@
+import axios from "axios"
+
 const url = 'http://localhost:5000/user/'
 
 class UserService {
     // get authenticated user
     static getUser() {
         return new Promise(async (resolve, reject) => {
-            const token = localStorage.getItem('auth')
-            if (!token) {
-                reject('not authenticated')
-            }
-
             try {
-                const res = await fetch(url + `infor`, {
-                    method: "GET",
-                    mode: 'cors',
+                // const res = await fetch(url + `infor`, {
+                //     method: "GET",
+                //     mode: 'cors',
+                //     headers: {
+                //     'Content-Type': 'application/json',
+                //     Authorization: localStorage.getItem('auth')
+                //     },
+                //     credentials: 'include',
+                // })
+                // const data = await res.json()
+
+                // if (res.status !== 200) {
+                //     reject(data.msg)
+                // }
+
+                // resolve(data)
+                console.log('getuser')
+                const res = await axios.get(url + 'infor', {
                     headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: token
+                        'Content-Type': 'application/json',
+                        Authorization: localStorage.getItem('auth') 
                     },
-                    credentials: 'include',
                 })
-                const data = await res.json()
 
-                if (res.status !== 200) {
-                    reject(data.msg)
-                }
-
-                resolve(data)
+                resolve(res.data)
 
             } catch (err) {
                 reject(err)
@@ -36,21 +42,28 @@ class UserService {
     static login(email, password) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await fetch(url + 'login', {
-                    method: "POST",
-                    mode: 'cors',
+                // const res = await fetch(url + 'login', {
+                //     method: "POST",
+                //     mode: 'cors',
+                //     headers: {'Content-Type': 'application/json'},
+                //     credentials: 'include',
+                //     body: JSON.stringify({email: email, password: password})
+                // })
+                // const data = await res.json()
+
+                // if (res.status !== 200) {
+                //    reject(data.msg)
+                // }
+
+                // localStorage.auth = data
+                // resolve()
+                const res = await axios.post(url + 'login', {email, password}, {
                     headers: {'Content-Type': 'application/json'},
-                    credentials: 'include',
-                    body: JSON.stringify({email: email, password: password})
+                    withCredentials: true,
                 })
-                const data = await res.json()
 
-                if (res.status !== 200) {
-                   reject(data.msg)
-                }
-
-                localStorage.auth = data
-                resolve('done')
+                localStorage.setItem('auth', res.data)
+                resolve()
 
             } catch(err) {
                 reject(err)
@@ -65,17 +78,18 @@ class UserService {
                     method: "POST",
                     mode: 'cors',
                     headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('auth')},
+                        'Content-Type': 'application/json',
+                        // 'Authorization': localStorage.getItem('auth')
+                    },
                     credentials: 'include',
                     body: ''
                 })
                 const data = await res.json()
+                console.log('logging out')
 
                 if (res.status !== 200) {
                     reject(data.msg)
                 }
-
                 localStorage.removeItem('auth')
                 resolve(data)
 
@@ -143,6 +157,23 @@ class UserService {
             }
         })
 
+    }
+
+    static refreshToken() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.get(url + 'refresh_token',{
+                    withCredentials: true
+                })
+                localStorage.setItem('auth', res.data.accesstoken)
+                // console.log(res.data.accesstoken)
+                resolve(res.data.accesstoken)
+
+            } catch(err) {
+                console.log(err.response)
+                reject(err)
+            }
+        })
     }
 }
 
