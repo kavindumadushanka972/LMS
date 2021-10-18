@@ -29,10 +29,10 @@ export default {
 .list-item {
     position: relative;
     border: 3px solid #e5e5e5;
-    /* background-color: #e5e5e5; */
+    background-color: #e5e5e5;
     padding: 5px;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 8px;
+    margin-bottom: 8px;
     cursor: pointer;
     /* height: 4rem; */
 }
@@ -55,7 +55,7 @@ export default {
 .selected{
     border-color: blue;
 }
-selected:hover {
+.selected:hover {
     border-color: blue;
 }
 </style>

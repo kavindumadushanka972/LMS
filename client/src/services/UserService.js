@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const url = 'http://localhost:5000/user/'
+const url = '/api/user/'
 
 class UserService {
     // get authenticated user
@@ -27,14 +27,14 @@ class UserService {
                 const res = await axios.get(url + 'infor', {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: localStorage.getItem('auth') 
+                        Authorization: localStorage.getItem('auth')
                     },
                 })
 
                 resolve(res.data)
 
             } catch (err) {
-                reject(err)
+                reject(err.response.data.msg)
             }
         })
     }
@@ -66,7 +66,7 @@ class UserService {
                 resolve()
 
             } catch(err) {
-                reject(err)
+                reject(err.response.data.msg)
             }
         })
     }
@@ -74,27 +74,36 @@ class UserService {
     static logout() {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await fetch(url + 'logout', {
-                    method: "POST",
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // 'Authorization': localStorage.getItem('auth')
-                    },
-                    credentials: 'include',
-                    body: ''
-                })
-                const data = await res.json()
-                console.log('logging out')
+                // const res = await fetch(url + 'logout', {
+                //     method: "POST",
+                //     mode: 'cors',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         // 'Authorization': localStorage.getItem('auth')
+                //     },
+                //     credentials: 'include',
+                //     body: ''
+                // })
+                // const data = await res.json()
+                // console.log('logging out')
 
-                if (res.status !== 200) {
-                    reject(data.msg)
-                }
+                // if (res.status !== 200) {
+                //     reject(data.msg)
+                // }
+                // localStorage.removeItem('auth')
+                // resolve(data)
+
+                const res = await axios.post(url + 'logout', {}, {
+                    headers: {
+                        'Authorization': localStorage.getItem('auth')
+                    }
+                })
+
                 localStorage.removeItem('auth')
-                resolve(data)
+                resolve()
 
             } catch(err) {
-                reject(err)
+                reject(err.response.data.msg)
             }
         })
     }
@@ -102,30 +111,50 @@ class UserService {
     static register(userData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await fetch(url + 'register', {
-                    method: "POST",
-                    mode: 'cors',
-                    headers: {'Content-Type': 'application/json'},
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        name: userData.fname + ' ' + userData.lname,
-                        email: userData.email, 
-                        password: userData.password,
-                        passwordConf: userData.passwordConf,
-                        role: parseInt(userData.role)
-                    })
+                // const res = await fetch(url + 'register', {
+                //     method: "POST",
+                //     mode: 'cors',
+                //     headers: {'Content-Type': 'application/json'},
+                //     credentials: 'include',
+                //     body: JSON.stringify({
+                //         name: userData.fname + ' ' + userData.lname,
+                //         email: userData.email, 
+                //         password: userData.password,
+                //         passwordConf: userData.passwordConf,
+                //         role: parseInt(userData.role)
+                //     })
+                // })
+                // const data = await res.json()
+
+                // if (res.status !== 200) {
+                //     reject(data.msg)
+                // }
+
+                // localStorage.setItem('auth', data)
+                // resolve()
+
+
+                const res = await axios.post(url + 'register', {
+                    name: userData.fname + ' ' + userData.lname,
+                    email: userData.email, 
+                    password: userData.password,
+                    passwordConf: userData.passwordConf,
+                    role: parseInt(userData.role)
+                }, 
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    withCredentials: true
                 })
-                const data = await res.json()
-
-                if (res.status !== 200) {
-                    reject(data.msg)
-                }
-
-                localStorage.setItem('auth', data)
+                
+                localStorage.setItem('auth', res.data)
                 resolve()
 
+
+
             } catch(err) {
-                reject(err)
+                reject(err.response.data.msg)
             }
         })
     }
@@ -133,27 +162,36 @@ class UserService {
     static enroll(newCourse) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await fetch(url + 'enroll', {
-                    method: "PATCH",
-                    mode: 'cors',
+                // const res = await fetch(url + 'enroll', {
+                //     method: "PATCH",
+                //     mode: 'cors',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         Authorization: localStorage.getItem('auth')
+                //     },
+                //     credentials: 'include',
+                //     body: JSON.stringify({course: newCourse})
+                // })
+                
+                // const data = await res.json()
+
+                // if (res.status != 200) {
+                //     reject(data.msg)
+                // } 
+
+                // resolve()
+
+                const res = await axios.patch(url + 'enroll', {course: newCourse}, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: localStorage.getItem('auth')
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({course: newCourse})
+                    }
                 })
-                
-                const data = await res.json()
-
-                if (res.status != 200) {
-                    reject(data.msg)
-                } 
 
                 resolve()
 
             } catch (err) {
-                reject(err)
+                reject(err.response.data.msg)
             }
         })
 
@@ -171,7 +209,7 @@ class UserService {
 
             } catch(err) {
                 console.log(err.response)
-                reject(err)
+                reject(err.response.data.msg)
             }
         })
     }

@@ -16,8 +16,7 @@
                     <h4 v-else>Enrolled</h4>
                 </div>
                 <div v-else-if="isCourseOwner">
-                    <button class="btn btn-outline-dark" @click="$router.push(`/course-editor/${course._id}`)">Edit Course</button>
-                    <button class="btn btn-info" @click="$router.push(`/video-editor/${course._id}`)">+ Add Video</button>
+                    <button class="btn btn-outline-dark" @click="$router.push(`/course-editor/${course._id}`)">Edit Course</button>            
                     <button class="btn btn-danger" @click="deleteCourse">Delete Course</button>
                 </div>
             </div>
@@ -29,11 +28,11 @@
         <div v-else class="col-md-8">
             <button class="btn btn-dark btn-sm" @click="setCourseMode"><i class="fas fa-arrow-left"></i> Back to course home</button>
             <h1>{{ `${course.title}: ${currentVideo.title}` }}</h1>
-            <Video :video="currentVideo"/>
+            <Video :key="currentVideo._id" :video="currentVideo"/>
         </div>
 
          <div v-if="enrolled || isCourseOwner" class="col-md-4 video-container">
-            <h4>{{ videos.length > 0 ? 'Watch Course Videos' : 'No Videos Yet' }}</h4>
+            <h4>{{ videos.length > 0 ? 'Course Videos' : 'No Videos Yet' }}</h4>
 
             <!-- <div :class="['video-tag', 'row',isVideoSelected(video)? 'video-tag-selected':'']" 
                 :key="video._id" v-for="(video, index) in videos" :video="video" >
@@ -49,6 +48,7 @@
                                 :showDeleteButton="isCourseOwner"
                                 :showEditButton="isCourseOwner"
                                 :selected="isVideoSelected(video)"/>
+             <button v-if="isCourseOwner" class="btn btn-info col-12" @click="$router.push(`/video-editor/${course._id}`)">+ Add Video</button>
         </div>
       
     </div>
@@ -133,7 +133,7 @@ export default {
             this.currentVideo = null
         },
         async deleteVideo(video) {   
-                console.log(this.currentVideo._id, video._id)
+                // console.log(this.currentVideo._id, video._id)
 
 
             if (confirm('Are you sure want to delete this video?')) {

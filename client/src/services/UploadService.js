@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const url = 'http://localhost:5000/api/'
-// const url = 'http://localhost:4500/'
+const url = '/api/'
+
 
 class UploadSearvice {
     static uploadImage(file) {
@@ -37,7 +37,7 @@ class UploadSearvice {
                         Authorization: localStorage.getItem('auth')
                     }
                 })
-
+                console.log(res.data)
                 resolve(res.data)
             } catch(err) {
                 reject(err.response.data.msg)

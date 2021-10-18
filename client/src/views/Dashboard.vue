@@ -64,7 +64,7 @@ export default {
         }
     },
     async mounted() {
-        await UserService.refreshToken()
+        // await UserService.refreshToken()
         await this.$store.dispatch('loadUser')
         if (!this.user) {
             this.$router.push('/')

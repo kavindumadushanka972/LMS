@@ -62,10 +62,15 @@ const store = createStore({
           context.commit('setUser', null)
           return
         }
-
-        await UserService.getUser()
-        .then((data) => context.commit('setUser', data))
-        .catch((err) => context.commit('setUser', null))
+        
+        try {
+          const data = await UserService.getUser()
+          context.commit('setUser', data)
+        } catch(err) {
+          context.commit('setUser', null)
+          console.log(err)
+        }
+       
       },
       async updateCourseList(context, payload) {
         await UserService.enroll(payload)

@@ -12,15 +12,25 @@
         <textarea type="text" class="form-control" rows="10" v-model="video.description" required></textarea>
       </div>
 
-        <div class="section">
+        <!-- <div class="section">
             <label for="URL">Embed Link</label>
             <input type="text" class="form-control" placeholder="" v-model="video.link" required>
+        </div> -->
+
+         <div class="section file-section">
+            <label for="Video">Video</label>
+             <div class="custom-file">
+              <input type="file" class="custom-file-input" @change="handleFileUpload" id="customFile">
+              <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+            <p v-if="uploading"> <b>uploading...</b></p>
         </div>
 
-        <div v-if="video.link !== ''" class="preview section">
+        
+
+        <!-- <div v-if="video.link !== ''" class="preview section">
            <Video :video="video"/>
-        </div>
-       <input name="foo" type="file" />
+        </div> -->
         <div class="section">
             <p v-if="errorMsg != ''">{{ errorMsg }}</p>
             <button class="btn btn-lg btn-dark btn-block" type="submit">Save</button>
@@ -33,6 +43,7 @@
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex'
 import Video from '../components/Video'
+import UploadService from '../services/UploadService'
 import VideoService from '../services/VideoService'
 
 export default {
@@ -46,8 +57,10 @@ export default {
             title: '',
             description: '',
             link: '',
+            public_id: ''
         },
-        errorMsg: ''     
+        errorMsg: '' ,
+        uploading: false    
     }
   },
   async mounted() {
@@ -108,6 +121,20 @@ export default {
         console.log(err)
       }
     },
+    async handleFileUpload(event) {
+      try {
+        this.uploading = true
+        const data = await UploadService.uploadVideo(event.target.files[0])
+        console.log(data)
+        this.video.link = data.url
+        this.video.public_id = data.public_id
+        this.uploading = false
+
+      } catch(err) {
+        this.uploading = false
+        this.errorMsg = err
+      }
+    },
   
     ...mapActions(['loadUser', 'fetchCourses'])
   },
@@ -127,13 +154,15 @@ export default {
   background-color: #A0E7E5;
   position: relative;
   top: 0;
-
 }
 .section {
     margin-top: 40px;
 }
-.preview {
+.image-section {
     text-align: center;
+}
+img {
+  width: 90%;
 }
 .container {
   /* display: -ms-flexbox;
@@ -196,4 +225,12 @@ label {
     margin-bottom: 5px;
     font-weight: 600;
 }
+.custom-file-label {
+  font-weight: 400;
+  margin-top: 10px;
+}
+.file-section {
+  margin-bottom: 50px;
+}
+
 </style>

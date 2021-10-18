@@ -10,8 +10,8 @@ class SetupInterceptors {
             }, 
             async (err) => {
                 const originalConfig = err.config
-                console.log('intercept erro ' + originalConfig.url)
-                if (err.response && err.response.status === 400 ) {
+                console.log('intercept erro ' + originalConfig.url + ' ' + err.response.status)
+                if (err.response && err.response.status === 400 && originalConfig.url !== 'user/refresh_token' ) {
                 
                     // const token = localStorage.getItem('auth')
                     // originalConfig.headers.Authorization = token
@@ -21,6 +21,7 @@ class SetupInterceptors {
                         try {
                             await UserService.refreshToken()
                             // originalConfig.headers.Authorization = token
+                            console.log('ref')
                             return axios(originalConfig)
     
                         } catch(err) {
@@ -30,7 +31,7 @@ class SetupInterceptors {
                        
                     } else {
                         await UserService.logout()
-                        return Promise.reject('invalid athentication. login required')
+                        return Promise.reject(err)
                     }
                 }
 

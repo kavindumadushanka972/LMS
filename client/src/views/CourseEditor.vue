@@ -232,5 +232,6 @@ label {
 }
 .custom-file-label {
   font-weight: 400;
+  margin-top: 10px;
 }
 </style>

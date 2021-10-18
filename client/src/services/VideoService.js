@@ -1,25 +1,30 @@
-const url = 'http://localhost:5000/api/videos/'
+import axios from 'axios'
+
+const url = '/api/videos/'
 
 class VideoService {
     static getVideosByCourseId(courseId) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await fetch(`${url}${courseId}`, {
-                    method: "GET",
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: localStorage.getItem('auth')
-                    },
-                    credentials: 'include',
-                })
+                // const res = await fetch(`${url}${courseId}`, {
+                //     method: "GET",
+                //     mode: 'cors',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         Authorization: localStorage.getItem('auth')
+                //     },
+                //     credentials: 'include',
+                // })
 
-                const data = await res.json()
-                if (res.status != 200) {
-                    reject(data.msg)
-                } 
+                // const data = await res.json()
+                // if (res.status != 200) {
+                //     reject(data.msg)
+                // } 
                 
-                resolve(data)
+                // resolve(data)
+
+                const res = await axios.get(`${url}${courseId}`)
+                resolve(res.data)
 
             } catch(err) {
                 reject(err)
@@ -61,24 +66,33 @@ class VideoService {
     static deleteVideo(videoId) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await fetch(`${url}${videoId}`, {
-                    method: "DELETE",
-                    mode: 'cors',
+                // const res = await fetch(`${url}${videoId}`, {
+                //     method: "DELETE",
+                //     mode: 'cors',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         Authorization: localStorage.getItem('auth')
+                //     },
+                //     credentials: 'include',
+                // })
+
+                // const data = await res.json()
+                // if (res.status != 200) {
+                //     reject(data.msg)
+                // } 
+                // resolve()
+
+                await axios.delete(`${url}${videoId}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: localStorage.getItem('auth')
                     },
-                    credentials: 'include',
                 })
 
-                const data = await res.json()
-                if (res.status != 200) {
-                    reject(data.msg)
-                } 
                 resolve()
 
             } catch(err) {
-                reject(err)
+                reject(err.resoponse.data.msg)
             }
         })
     }
