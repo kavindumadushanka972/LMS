@@ -1,5 +1,5 @@
 <template>
-      <div class="course-editor row">
+    <div class="course-editor row">
      <div class="container col-md-6" >
      <form class="form-course-editor" @submit.prevent="submit">
       <h1>i<span class="ilearn-l">L</span>earn</h1>
@@ -15,9 +15,9 @@
           <label for="image">Image</label>
             <div class="custom-file">
             <input type="file" class="custom-file-input" @change="handleFileUpload" id="customFile">
-            <label class="custom-file-label" for="customFile">Choose file</label>
+            <label class="custom-file-label" for="customFile">{{ fileName ? fileName : 'Choose file' }}</label>
           </div>
-          <p v-if="uploading"> <b>uploading...</b></p>
+          <p class="uploading-text" v-if="uploading">uploading...</p>
       </div>
 
       <div class="image-section section">
@@ -57,6 +57,7 @@ export default {
             image_url: '',
             image_public_id: ''
         },
+        fileName: '',
         errorMsg: '',
         uploading: false  
     }
@@ -79,7 +80,7 @@ export default {
     async submit() {
       try {
         await CourseService.updateCourse(this.course, this.$route.params.id)
-        this.$router.push('/dashboard')
+        this.$router.push(this.$route.params.id ? `/course/${this.$route.params.id}`: '/dashboard') 
       } catch(err) {
         this.errMsg = err
       }
@@ -87,6 +88,7 @@ export default {
     async handleFileUpload(event) {
       try {
         this.uploading = true
+        this.fileName = event.target.files[0].name
         const data = await UploadService.uploadImage(event.target.files[0])
         console.log(data)
         this.course.image_url = data.url
@@ -126,32 +128,17 @@ img {
   width: 90%;
 }
 .container {
-  /* display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -ms-flex-align: center;
-  -ms-flex-pack: center;
-  -webkit-box-align: center; */
   align-items: center;
-  /* -webkit-box-pack: center; */
   justify-content: center;
   padding: 40px 20px;
-  /* padding-top: 40px;
-  padding-bottom: 40px; */
-  /* background-color: #f5f5f5; */
-  /* width: 50%; */
   border: 1px solid  #e6e3e3;
   background-color: white;
 }
-
-
 .row {
     text-align: left;
 }
-
 .form-signin {
   width: 100%;
-  /* max-width: 330px; */
   padding: 15px;
   margin: 0 auto;
 }
@@ -168,16 +155,6 @@ img {
 .form-signin .form-control:focus {
   z-index: 2;
 }
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
 .select-category {
   margin-bottom: 100px;
 }
@@ -189,5 +166,8 @@ label {
 .custom-file-label {
   font-weight: 400;
   margin-top: 10px;
+}
+.uploading-text {
+  margin-top: 20px;
 }
 </style>

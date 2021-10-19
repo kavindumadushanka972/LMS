@@ -47,10 +47,7 @@
             <button class="btn btn-dark btn-sm" @click="setCourseMode"><i class="fas fa-arrow-left"></i> Back to course home</button>
             <h1>{{ `${course.title}: ${currentVideo.title}` }}</h1>
             <Video :key="currentVideo._id" :video="currentVideo"/>
-        </div>
-
-        
-      
+        </div>   
     </div>
 </template>
 
@@ -121,9 +118,6 @@ export default {
             this.currentVideo = null
         },
         async deleteVideo(video) {   
-                // console.log(this.currentVideo._id, video._id)
-
-
             if (confirm('Are you sure want to delete this video?')) {
                  if (this.currentVideo && this.currentVideo._id === video._id) {
                     this.setCourseMode()

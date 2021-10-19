@@ -1,22 +1,20 @@
 <template>
     <div class="login-form row">
-     <div class="container col-md-4" >
+     <div class="container col-lg-3 col-md-5" >
      <form class="form-signin" @submit.prevent="submit">
       <h1>i<span class="ilearn-l">L</span>earn</h1>
-      <!-- <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+     
       <label for="inputEmail" class="sr-only">Email address</label>
       <input type="email" id="inputEmail" class="form-control" placeholder="Email address" v-model="email" required autofocus>
+      
       <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" v-model="password" required>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" v-model="password" required>  
+      
+      <div class="submit-section">
+        <p v-if="errorMsg">{{ errorMsg }}</p>
+        <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
       </div>
-      <p v-if="errorMsg">{{ errorMsg }}</p>
-      <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
-      <!-- <p class="mt-5 mb-3 text-muted">&copy; 2021</p> -->
     </form>
      </div>
     </div>
@@ -31,53 +29,24 @@ export default {
     return {
       email: '',
       password: '',
-      errorMsg: ''
+      errorMsg: ''  // error to display 
     }
   },
   methods: {
-    async submit() {
-      // try {
-      //   const res = await fetch('http://localhost:5000/user/login', {
-      //     method: "POST",
-      //     mode: 'cors',
-      //     headers: {'Content-Type': 'application/json'},
-      //     credentials: 'include',
-      //     body: JSON.stringify({email: this.email, password: this.password})
-      //   })
-      //   const data = await res.json()
-      //   console.log(data)
-
-      //   if (res.status !== 200) {
-      //     this.incorrectPassword = true
-      //     this.errorMsg = data.msg
-      //     return
-      //   }
-       
-       
-      //   // this.$store.commit('setAuth', data)
-      //   localStorage.auth = data
-      //   this.$router.push('/dashboard')
-
-      // } catch(err) {
-      //    this.incorrectPassword = true
-      //   this.errorMsg = err
-      // }
+    async submit() {  // redirect to dashboard
       try {
         await UserService.login(this.email, this.password)
         this.$router.push('/dashboard')
       } catch(err) {
         console.log('login error')
         this.errorMsg = err
-      }
-     
-
+      }    
     }
   }
 }
 </script>
 
 <style scoped>
-
 .login-form {
   width: 100%;
   padding: 0;
@@ -87,35 +56,21 @@ export default {
   background-color: #A0E7E5;
   position: relative;
   top: 0;
-
 }
 .container {
-  /* display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -ms-flex-align: center;
-  -ms-flex-pack: center;
-  -webkit-box-align: center; */
   align-items: center;
-  /* -webkit-box-pack: center; */
   justify-content: center;
   padding-top: 40px;
   padding-bottom: 40px;
-  /* background-color: #f5f5f5; */
-  /* width: 50%; */
   border: 1px solid  #e6e3e3;
   background-color: white;
+  border-radius: 10px;
 }
-
-
 .form-signin {
   width: 100%;
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
-}
-.form-signin .checkbox {
-  font-weight: 400;
 }
 .form-signin .form-control {
   position: relative;
@@ -136,5 +91,8 @@ export default {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+.submit-section {
+  margin-top: 30px;
 }
 </style>

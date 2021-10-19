@@ -59,6 +59,7 @@ import MiniForm from '../components/MiniForm'
 import CourseService from '../services/CourseService'
 import CategoryService from '../services/CategoryService'
 import UserService from '../services/UserService'
+import EventBus from '../common/EventBus'
 
 export default {
     name: 'Dashboard',
@@ -74,8 +75,6 @@ export default {
     },
     async mounted() {
         await this.$store.dispatch('loadUser')
-        // const token = await UserService.refreshToken()
-        // console.log(token)
         if (!this.user) {
             this.$router.push('/')
         }
@@ -84,10 +83,10 @@ export default {
         await this.fetchCategories()
     },
     computed: {
-        fname() {
+        fname() {   // first name
             return this.user.name.split(' ')[0]
         },
-        roleStr() {
+        roleStr() { // return the role as a string
             const roles = ['Student', 'Teacher', 'Admin']
             return roles[this.user.role - 1]
         },
@@ -102,69 +101,23 @@ export default {
                await this.fetchTeacherCourses()
             }
         },
-        async fetchStudentCourses() {
-            // let courseList = this.user.courses
-            // this.clearCourses()
-            // for (let courseID of courseList) {
-            //     const res = await fetch(`http://localhost:5000/api/courses/${courseID}`)
-            //         .catch(console.log)
-
-            //     const data = await res.json()
-            //     if (res.status != 200) {
-            //         continue
-            //     }
-                
-            //     console.log(data)   
-            //     this.insertCourse(data)
-            //     // this.courses.push(data)
-            // }
+        async fetchStudentCourses() {   // student courses from user.courses
             try {
                 const courses = await CourseService.getCoursesByIds(this.user.courses)
                 this.setCourseList(courses)
             } catch(err) {
-                // Toast
+                EventBus.trigger('toast', err)
             }
-            // await this.fetchCourses(this.user.courses)
-
         },
-        async fetchTeacherCourses() {
-            // const res = await fetch(`http://localhost:5000/api/mycourses/${this.user._id}`, {
-            //     method: "GET",
-            //     mode: 'cors',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         Authorization: this.$store.getters.authToken
-            //     },
-            //     credentials: 'include'
-            // })
-            
-            // const data = await res.json()
-            // console.log('d ' + data)
-            // if (res.status !== 200) {
-            //     return
-            // }  
-            // this.setCourseList(data)
-            // // for (let course of data) {
-            // //     this.courses.push(course)
-            // // }
-            // console.log('5 ' + this.$store.state.courses)
-            // // this.courses = data
-            // console.log(this.courses[0])
+        async fetchTeacherCourses() {   // teacher courses by teacher id
             try {
                 const courses = await CourseService.getCoursesByOwnerId(this.user._id)
                 this.setCourseList(courses)
             } catch(err) {
-                // Toast
+                EventBus.trigger('toast', err)
             }
 
         },
-        // createCategory(data) {
-        //     console.log(data.name)
-        //     // await CategoryService.createCategory(data.name)
-        // },
-        // deleteCategory(category) {
-        //     console.log(category)
-        // },
         ...mapMutations(['setCourseList', 'clearCourses', 'insertCourse']),
         ...mapActions(['fetchCourses', 'fetchCategories', 'createCategory', 'deleteCategory'])
     }

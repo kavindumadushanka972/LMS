@@ -36,7 +36,7 @@ export default {
         }
     },
     async mounted() {
-        if (this.$route.query.page) {
+        if (this.$route.query.page) {   // if currently has a page ?
             this.page = parseInt(this.$route.query.page)
             
         } else {
@@ -45,12 +45,12 @@ export default {
         this.courses = await CourseService.getCoursesByQuery(this.$route.query)
     },
     methods: {
-        async nextPage() {
+        async nextPage() {  // increment the page number 
             this.page++
             this.$router.push({query: {page: this.page}})
             await this.switchPage()
         },
-        async prevPage() {
+        async prevPage() {  // decreament the page number 
             this.page--
             this.$router.push({query: {page: this.page}})
             this.switchPage()
@@ -62,9 +62,9 @@ export default {
                 EventBus.trigger('toast', err)
             }
         },
-        async search(searchData) {
+        async search(searchData) {  // search based on search querys form
             const query = {
-                'title[regex]': searchData.keyword,
+                'title[regex]': searchData.keyword, // search keyword
                 sort: searchData.sort
             }
             if (searchData.category !== '') {
@@ -105,6 +105,4 @@ h1 {
     display: inline;
     margin: 30px;
 }
-
-
 </style>

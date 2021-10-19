@@ -8,24 +8,26 @@ class SetupInterceptors {
             (res) =>{
                 return res
             }, 
+            // this function will handel authetication realted errors
             async (err) => {
                 const originalConfig = err.config
+
+                // do not consider /refresh_token /login
                 if (err.response && err.response.status === 400 &&
                      originalConfig.url !== '/api/user/refresh_token' && 
                      originalConfig.url !== '/api/user/login' ) {
-
-                    console.log('intercept erro ' + originalConfig.url + ' ' + err.response.status)
-                
+                    
+                    // turn on _retry flag if it is not 
                     if (!originalConfig._retry) {
                         originalConfig._retry = true
                         try {
-                            const token = await UserService.refreshToken()
-                            originalConfig.headers.Authorization = token
+                            const token = await UserService.refreshToken()  // refresh token
+                            originalConfig.headers.Authorization = token    // now _rety = true
                             return axios(originalConfig)
     
-                        } catch(err) {
+                        } catch(err) {  // do not loop
                             console.log(err)
-                            EventBus.trigger('logout')
+                            EventBus.trigger('logout')  // triger logout if refresh token failed
                             return Promise.reject(err)
                         }
                        

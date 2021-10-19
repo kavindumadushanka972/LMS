@@ -5,29 +5,28 @@
       <h1>i<span class="ilearn-l">L</span>earn</h1>
       <h1 class="h3 mb-3 font-weight-normal">Singn Up for Free</h1>
       <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="firstName">First name</label>
-                <input type="text" class="form-control" name="firstName" placeholder=""  v-model="userData.fname" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="lastName">Last name</label>
-                <input type="text" class="form-control" name="lastName" placeholder="" v-model="userData.lname" required>
-              </div>
+        <div class="col-md-6 mb-3">
+          <label for="firstName">First name</label>
+          <input type="text" class="form-control" name="firstName" placeholder=""  v-model="userData.fname" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="lastName">Last name</label>
+          <input type="text" class="form-control" name="lastName" placeholder="" v-model="userData.lname" required>
+        </div>
       </div>
 
        <div class="row">
-              <div class="col-md-12 mb-3">
-                <label for="inputEmail">Email</label>
-                <input type="email" class="form-control" name="firstName" placeholder="" v-model="userData.email" required>
-              </div>
-              <div class="col-md-12 mb-3">
-                <label for="inputPasword">Pasword</label>
-                <input type="password" name="password" class="form-control" v-model="userData.password" placeholder="" required>
-                <label for="inputPasword">Pasword confirmation</label>
-                <input type="password" name="passwordConf" class="form-control" v-model="userData.passwordConf" placeholder="" required>
-               
-                 
-              </div>
+          <div class="col-md-12 mb-3">
+            <label for="inputEmail">Email</label>
+            <input type="email" class="form-control" name="firstName" placeholder="" v-model="userData.email" required>
+          </div>
+          
+          <div class="col-md-12 mb-3">
+            <label for="inputPasword">Pasword</label>
+            <input type="password" name="password" class="form-control" v-model="userData.password" placeholder="" required>
+            <label for="inputPasword">Pasword confirmation</label>
+            <input type="password" name="passwordConf" class="form-control" v-model="userData.passwordConf" placeholder="" required>            
+          </div>
       </div>
 
       <div class="row">
@@ -40,8 +39,7 @@
         </div>
       </div>    
       <p v-if="errorMsg != ''">{{ errorMsg }}</p>
-      <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
+      <button class="btn btn-lg btn-dark btn-block" type="submit">Sign up</button>
     </form>
      </div>
      </div>
@@ -65,38 +63,13 @@ export default {
     }
   },
   methods: {
-    async submit() {
-      // try {
-      //   const res = await fetch('http://localhost:5000/user/register', {
-      //       method: "POST",
-      //       mode: 'cors',
-      //       headers: {'Content-Type': 'application/json'},
-      //       credentials: 'include',
-      //       body: JSON.stringify({
-      //         name: this.fname + ' ' + this.lname,
-      //         email: this.email, 
-      //         password: this.password,
-      //         passwordConf: this.passwordConf,
-      //         role: parseInt(this.role)
-      //       })
-      //   })
-      //   const data = await res.json()
-      //   console.log(data)
-
-      //   if (res.status !== 200) {
-      //     this.errorMsg = data.msg
-      //     return
-      //   }
-      //   this.errorMsg = ''
-      //   localStorage.auth = data
-      //   this.$router.push('/')
-
-      // } catch(err) {
-      //   this.errorMsg = err
-      // }
-      UserService.register(this.userData)
-      .then(() => this.$router.push('/'))
-      .catch((err) => this.errorMsg = err)
+    async submit() {  // redirect to dashboard
+      try {
+        await  UserService.register(this.userData)
+        this.$router.push('/dashboard')
+      } catch(err) {
+        this.errorMsg = err
+      }
     }
   }
 }
@@ -114,31 +87,19 @@ export default {
 
 }
 .container {
-  /* display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -ms-flex-align: center;
-  -ms-flex-pack: center;
-  -webkit-box-align: center; */
   align-items: center;
-  /* -webkit-box-pack: center; */
   justify-content: center;
   padding-top: 40px;
   padding-bottom: 40px;
-  /* background-color: #f5f5f5; */
-  /* width: 50%; */
   border: 1px solid  #e6e3e3;
   background-color: white;
+  border-radius: 10px;
 }
-
-
 .row {
     text-align: left;
 }
-
 .form-signin {
   width: 100%;
-  /* max-width: 330px; */
   padding: 15px;
   margin: 0 auto;
 }
@@ -167,5 +128,8 @@ export default {
 }
 .select-role {
   margin-bottom: 100px;
+}
+label {
+  font-weight: 600;
 }
 </style>

@@ -4,6 +4,12 @@ const url = '/api/'
 
 
 class UploadSearvice {
+    /**
+     * @brief upload image. return {public_id, link}
+     * Pretreatment
+     * @param  Object   file
+     * @return Promise<Object>
+     */
     static uploadImage(file) {
         return new Promise(async (resolve, reject) => {
             try {          
@@ -15,6 +21,12 @@ class UploadSearvice {
         })
     }
 
+   /**
+     * @brief upload video. return {public_id, link}
+     * Pretreatment
+     * @param  Object   file
+     * @return Promise<Object>
+     */
     static uploadVideo(file) {
         return new Promise(async (resolve, reject) => {
             try {          
@@ -26,6 +38,12 @@ class UploadSearvice {
         })
     }
 
+    /**
+     * @brief delete image.
+     * Pretreatment
+     * @param  string public_id
+     * @return Promise<undefined>
+     */
     static deleteImage(putlic_id) {
         return new Promise(async (resolve, reject) => {
             try {          
@@ -42,6 +60,13 @@ class UploadSearvice {
         })
     }
 
+
+    /**
+     * @brief delete video
+     * Pretreatment
+     * @param  string public_id
+     * @return Promise<undefined>
+     */
     static deleteVideo(putlic_id) {
         return new Promise(async (resolve, reject) => {
             try {          
@@ -58,7 +83,13 @@ class UploadSearvice {
         })
     }
 
-
+  /**
+     * @brief upload any file. return {public_id, link}
+     * Pretreatment
+     * @param Object file
+     * @param String uploadUrl
+     * @return Promise<Object>
+     */
     static uploadFile(file, uploadUrl) {
         return new Promise(async (resolve, reject) => {
             try {

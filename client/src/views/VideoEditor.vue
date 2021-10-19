@@ -1,43 +1,34 @@
 
 <template>
-      <div class="editor row">
+    <div class="editor row">
      <div class="container col-md-6" >
-     <form class="form-course-editor" @submit.prevent="submit">
-      <h1>i<span class="ilearn-l">L</span>earn</h1>
-      <h1 class="h3 mb-3 font-weight-normal">Video Editor</h1>
-      <div class="section">
-        <label for="title">Title</label>
-        <input type="text" class="form-control"  placeholder=""  v-model="video.title" required>
-        <label for="description">Description</label>
-        <textarea type="text" class="form-control" rows="10" v-model="video.description" required></textarea>
-      </div>
+      <form class="form-course-editor" @submit.prevent="submit">
+          <h1>i<span class="ilearn-l">L</span>earn</h1>
+          <h1 class="h3 mb-3 font-weight-normal">Video Editor</h1>
+         
+          <div class="section">
+            <label for="title">Title</label>
+            <input type="text" class="form-control"  placeholder=""  v-model="video.title" required>
+            <label for="description">Description</label>
+            <textarea type="text" class="form-control" rows="10" v-model="video.description" required></textarea>
+          </div>
 
-        <!-- <div class="section">
-            <label for="URL">Embed Link</label>
-            <input type="text" class="form-control" placeholder="" v-model="video.link" required>
-        </div> -->
-
-         <div class="section file-section">
+          <div class="section file-section">
             <label for="Video">Video</label>
-             <div class="custom-file">
+              <div class="custom-file">
               <input type="file" class="custom-file-input" @change="handleFileUpload" id="customFile">
-              <label class="custom-file-label" for="customFile">Choose file</label>
+              <label class="custom-file-label" for="customFile">{{ fileName ? fileName : 'Choose file' }}</label>
             </div>
-            <p v-if="uploading"> <b>uploading...</b></p>
+            <p class="uploading-text" v-if="uploading">uploading...</p>
         </div>
 
-        
-
-        <!-- <div v-if="video.link !== ''" class="preview section">
-           <Video :video="video"/>
-        </div> -->
         <div class="section">
             <p v-if="errorMsg != ''">{{ errorMsg }}</p>
             <button class="btn btn-lg btn-dark btn-block" type="submit">Save</button>
         </div>
-    </form>
+      </form>
      </div>
-     </div>
+    </div>
 </template>
 
 <script>
@@ -62,7 +53,8 @@ export default {
         videoIndex: 0,
         edit: false,
         errorMsg: '' ,
-        uploading: false    
+        uploading: false,
+        fileName: ''    
     }
   },
   async mounted() {
@@ -98,14 +90,13 @@ export default {
         
       } catch(err) {
         this.errorMsg = err
-        console.log(err)
       }
     },
     async handleFileUpload(event) {
       try {
         this.uploading = true
+        this.fileName = event.target.files[0].name
         const data = await UploadService.uploadVideo(event.target.files[0])
-        console.log(data)
         this.video.link = data.url
         this.video.public_id = data.public_id
         this.uploading = false
@@ -200,6 +191,9 @@ label {
 }
 .file-section {
   margin-bottom: 50px;
+}
+.uploading-text {
+  margin-top: 20px;
 }
 
 </style>

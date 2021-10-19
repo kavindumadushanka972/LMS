@@ -6,10 +6,15 @@ const url = "/api/courses/"
 const url2 = "/api/mycourses/"
 
 class CourseService {
+    /**
+     * @brief return list of course Objects
+     * Pretreatment
+     * @param  Array<Object>  courseIds
+     * @return Promise<Array<Object>> list of course objects
+     */
     static getCoursesByIds(courseIds) {
         return new Promise(async (resolve, reject) => {
             const courses = []
-            // try {
                 for (let id of courseIds) {
                     try {
                         const res = await axios.get(url + id)
@@ -18,34 +23,19 @@ class CourseService {
                         continue
                     }                 
                 }
-            // } catch(err) {
-            //     reject(err)
-            // }
-
             resolve(courses)
         })
     }
 
+    /**
+     * @brief return list of course for given owner id
+     * Pretreatment
+     * @param  String ownerId
+     * @return Promise<Array<Object>> list of course objects
+     */
     static getCoursesByOwnerId(ownerId) {
         return new Promise(async (resolve, reject) => {
             try {
-                // const res = await fetch(url2 + ownerId, {
-                //     method: "GET",
-                //     mode: 'cors',
-                //     headers: {
-                //     'Content-Type': 'application/json',
-                //         Authorization: localStorage.getItem('auth')
-                //     },
-                //     credentials: 'include'
-                // })
-
-                // const data = await res.json()
-                // if (res.status !== 200) {
-                //     reject(data.msg)
-                // }  
-               
-                // resolve(data)
-
                 const res = await axios.get(url2 + ownerId, {
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,6 +51,12 @@ class CourseService {
         })
     }
 
+    /**
+     * @brief delete a course with courseId
+     * Pretreatment
+     * @param  String courseId
+     * @return Promise<undefined>
+     */
     static deleteCourse(courseId) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -79,7 +75,14 @@ class CourseService {
         })
     }
 
-    // if courseId is not given create new course
+   
+    /**
+     * @brief update course id. if courseId is not given create new course
+     * Pretreatment
+     * @param Object  courseData
+     * @param String|undefined courseId
+     * @return Promise<undefined>
+     */
     static updateCourse(courseData, courseId) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -90,26 +93,6 @@ class CourseService {
                     method = 'PUT'
                     url_ += courseId
                 }
-
-                // const res = await fetch(url_, {
-                //     method: method,
-                //     mode: 'cors',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         Authorization: localStorage.getItem('auth')
-                //     },
-                //     credentials: 'include',
-                //     body: JSON.stringify({
-                //         ...courseData,
-                //         // image_public_id: '0'
-                //     })
-                // })
-
-                // const data = await res.json()
-
-                // if (res.status !== 200) {
-                //     reject(data.msg)
-                // }
 
                 await axios({
                     url: url_,
@@ -129,22 +112,19 @@ class CourseService {
         })
     }
 
+
+    
+    /**
+     * @brief return list of courses acoording to the query object
+     * Pretreatment
+     * @param Object  query
+     * @return Promise<Array<Object>> list of course objects
+     */
     static getCoursesByQuery(query) {
         return new Promise(async (resolve, reject) => {
             try {
-                // const res = await fetch(`http://localhost:5000/api/courses?${new URLSearchParams(query)}`)
-                // const data = await res.json()
-
-                // if (res.status != 200) {
-                //     reject(data.msg)
-                // }
-                
-                // resolve(data.courses)
-
                 const res = await axios.get(url, {params: query})
                 resolve(res.data.courses)
-
-
 
             } catch(err) {
                 reject(err.response.data.msg)

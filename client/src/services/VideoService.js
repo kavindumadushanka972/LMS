@@ -3,26 +3,15 @@ import axios from 'axios'
 const url = '/api/videos/'
 
 class VideoService {
+    /**
+     * @brief return list of videos of given id 
+     * Pretreatment
+     * @param  String  courseId
+     * @return Promise<Array> list of video objects
+     */
     static getVideosByCourseId(courseId) {
         return new Promise(async (resolve, reject) => {
             try {
-                // const res = await fetch(`${url}${courseId}`, {
-                //     method: "GET",
-                //     mode: 'cors',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         Authorization: localStorage.getItem('auth')
-                //     },
-                //     credentials: 'include',
-                // })
-
-                // const data = await res.json()
-                // if (res.status != 200) {
-                //     reject(data.msg)
-                // } 
-                
-                // resolve(data)
-
                 const res = await axios.get(`${url}${courseId}`)
                 resolve(res.data)
 
@@ -32,37 +21,37 @@ class VideoService {
         })
     }
 
+    /**
+     * @brief create new video 
+     * Pretreatment
+     * @param  Object   videoData
+     * @param  String   courseId
+     * @return Promise<undefind> 
+     */
     static createVideo(videoData, courseId) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await fetch(`${url}${courseId}`, {
-                    method: 'POST',
-                    mode: 'cors',
+                await axios.post(`${url}${courseId}`, videoData, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization:  localStorage.getItem('auth')
                     },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        ...videoData,
-                        public_id: '0',
-                        
-                    })
                 })
-                const data = await res.json()
-        
-                if (res.status !== 200) {
-                  reject(data.msg)
-                }
-                
+
                 resolve()
         
               } catch(err) {
-                reject(err)
+                reject(err.response.data.msg)
               }
         })
     }
 
+    /**
+     * @brief edit existing video
+     * Pretreatment
+     * @param  Object   videoData
+     * @return Promise<undefind> 
+     */
     static updateVideo(videoData) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -81,25 +70,15 @@ class VideoService {
         })
     }
 
+    /**
+     * @brief delete existing video
+     * Pretreatment
+     * @param  String   videoId
+     * @return Promise<undefind>
+     */
     static deleteVideo(videoId) {
         return new Promise(async (resolve, reject) => {
             try {
-                // const res = await fetch(`${url}${videoId}`, {
-                //     method: "DELETE",
-                //     mode: 'cors',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         Authorization: localStorage.getItem('auth')
-                //     },
-                //     credentials: 'include',
-                // })
-
-                // const data = await res.json()
-                // if (res.status != 200) {
-                //     reject(data.msg)
-                // } 
-                // resolve()
-
                 await axios.delete(`${url}${videoId}`, {
                     headers: {
                         'Content-Type': 'application/json',
