@@ -7,6 +7,7 @@ import CoursePage from '../views/CoursePage'
 import Dashboard from '../views/Dashboard'
 import CourseEditor from '../views/CourseEditor'
 import VideoEditor from '../views/VideoEditor'
+import About from '../views/About'
 import store from '../store'
 
 
@@ -19,10 +20,7 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: About
   }, 
   {
     path: '/login',
@@ -63,13 +61,17 @@ const routes = [
     path: '/video-editor/:courseid',
     name: 'VideoCreator',
     component: VideoEditor
+  },
+  {
+    path: '/video-editor/:courseid/:videoindex',
+    name: 'VideoEditor',
+    component: VideoEditor
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
- 
 })
 
 router.beforeEach((to, from, next) => {

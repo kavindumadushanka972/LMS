@@ -32,8 +32,8 @@ export default {
     border-radius: 7px;
     background-color: #e5e5e5;
     padding: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 8px;
+    margin-bottom: 8px;
     cursor: pointer;
 }
 .list-item p {

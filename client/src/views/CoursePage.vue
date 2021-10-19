@@ -6,6 +6,7 @@
              <ListItem :key="video._id" v-for="(video, index) in videos" :name="video.title" :index="index+1"
                                 @handle_delete="deleteVideo(video)"
                                 @handle_click="setVideoMode(video)"
+                                @handle_edit="$router.push({name: 'VideoEditor', params: {courseid: course._id, videoindex: index}})"
                                 :showDeleteButton="isCourseOwner"
                                 :showEditButton="isCourseOwner"
                                 :selected="isVideoSelected(video)"/>

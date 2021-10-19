@@ -59,16 +59,27 @@ export default {
             link: '',
             public_id: ''
         },
+        videoIndex: 0,
+        edit: false,
         errorMsg: '' ,
         uploading: false    
     }
   },
   async mounted() {
+      await this.loadUser()
+
+      if (typeof this.$route.params.videoindex === 'string') {
+        this.edit = true
+        this.videoIndex = parseInt(this.$route.params.videoindex)
+        await this.fetchVideos(this.$route.params.courseid)
+        console.log(this.videos)
+        this.video = this.videos[this.videoIndex]
+      }
+      console.log('string') 
       if (this.$route.params.id) {
           await this.fetchCourses([this.$route.params.id])
-          // this.course = this.courses[0]
       }
-      await this.loadUser()
+      
       if (this.authenticated && this.user.role === 2) {
 
       } else {
@@ -77,43 +88,12 @@ export default {
   },
   methods: {
     async submit() {
-      // try {
-      //   let method = 'POST'
-      //   let url = `http://localhost:5000/api/videos/${this.$route.params.courseid}`
-      //   // if (this.$route.params.id) {
-      //   //     method = 'PUT'
-      //   //     url += '/' + this.$route.params.id
-      //   // }
-      //   const res = await fetch(url, {
-      //       method: method,
-      //       mode: 'cors',
-      //       headers: {
-      //           'Content-Type': 'application/json',
-      //           Authorization: this.authToken
-      //       },
-      //       credentials: 'include',
-      //       body: JSON.stringify({
-      //           ...this.video,
-      //           public_id: '0',
-                
-      //       })
-      //   })
-      //   const data = await res.json()
-      //   console.log(data)
-
-      //   if (res.status !== 200) {
-      //     this.errorMsg = data.msg
-      //     return
-      //   }
-      //   this.errorMsg = ''
-      //   this.$router.push('/')
-
-      // } catch(err) {
-      //   this.errorMsg = err
-      // }
-
       try {
-        await VideoService.createVideo(this.video, this.$route.params.courseid)
+        if (!this.edit) {
+          await VideoService.createVideo(this.video, this.$route.params.courseid)
+        } else {
+          await VideoService.updateVideo(this.video)
+        }
         this.$router.push(`/course/${this.$route.params.courseid}`)
         
       } catch(err) {
@@ -136,11 +116,11 @@ export default {
       }
     },
   
-    ...mapActions(['loadUser', 'fetchCourses'])
+    ...mapActions(['loadUser', 'fetchCourses', 'fetchVideos'])
   },
   computed: {
       ...mapGetters(['authenticated', 'authToken']),
-      ...mapState(['user', 'courses'])
+      ...mapState(['user', 'courses', 'videos'])
   }
 }
 </script>
@@ -165,20 +145,9 @@ img {
   width: 90%;
 }
 .container {
-  /* display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -ms-flex-align: center;
-  -ms-flex-pack: center;
-  -webkit-box-align: center; */
   align-items: center;
-  /* -webkit-box-pack: center; */
   justify-content: center;
   padding: 40px 20px;
-  /* padding-top: 40px;
-  padding-bottom: 40px; */
-  /* background-color: #f5f5f5; */
-  /* width: 50%; */
   border: 1px solid  #e6e3e3;
   background-color: white;
 }

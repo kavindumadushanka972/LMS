@@ -63,6 +63,24 @@ class VideoService {
         })
     }
 
+    static updateVideo(videoData) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await axios.put(`${url}${videoData._id}`, videoData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: localStorage.getItem('auth')
+                    },
+                })
+                resolve()
+
+            } catch(err) {
+                console.log(err)
+                reject(err.response.data.msg)
+            }
+        })
+    }
+
     static deleteVideo(videoId) {
         return new Promise(async (resolve, reject) => {
             try {
