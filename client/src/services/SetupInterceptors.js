@@ -10,8 +10,8 @@ class SetupInterceptors {
             }, 
             async (err) => {
                 const originalConfig = err.config
-                console.log('intercept erro ' + originalConfig.url + ' ' + err.response.status)
-                if (err.response && err.response.status === 400 && originalConfig.url !== 'user/refresh_token' ) {
+                if (err.response && err.response.status === 400 && originalConfig.url !== '/api/user/refresh_token' ) {
+                    console.log('intercept erro ' + originalConfig.url + ' ' + err.response.status)
                 
                     // const token = localStorage.getItem('auth')
                     // originalConfig.headers.Authorization = token
@@ -19,18 +19,17 @@ class SetupInterceptors {
                     if (!originalConfig._retry) {
                         originalConfig._retry = true
                         try {
-                            await UserService.refreshToken()
-                            // originalConfig.headers.Authorization = token
-                            console.log('ref')
+                            const token = await UserService.refreshToken()
+                            originalConfig.headers.Authorization = token
                             return axios(originalConfig)
     
                         } catch(err) {
                             console.log(err)
+                            await UserService.logout()
                             return Promise.reject('refresh token expired/invalid. login required')
                         }
                        
-                    } else {
-                        await UserService.logout()
+                    } else {        
                         return Promise.reject(err)
                     }
                 }

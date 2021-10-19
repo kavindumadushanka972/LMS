@@ -1,5 +1,16 @@
 <template>
     <div class="course-page row" v-if="course">
+         <div v-if="enrolled || isCourseOwner" class="col-md-4 video-container">
+            <h4>{{ videos.length > 0 ? 'Course Videos' : 'No Videos Yet' }}</h4>
+
+             <ListItem :key="video._id" v-for="(video, index) in videos" :name="video.title" :index="index+1"
+                                @handle_delete="deleteVideo(video)"
+                                @handle_click="setVideoMode(video)"
+                                :showDeleteButton="isCourseOwner"
+                                :showEditButton="isCourseOwner"
+                                :selected="isVideoSelected(video)"/>
+             <button v-if="isCourseOwner" class="btn btn-info col-12" @click="$router.push(`/video-editor/${course._id}`)">+ Add Video</button>
+        </div>
         <div v-if="!videoMode" class="col-md-8 align-self-center">
             <h1>{{ course.title }}</h1>
             <h5>by {{ course.owner_name }}</h5>
@@ -31,25 +42,7 @@
             <Video :key="currentVideo._id" :video="currentVideo"/>
         </div>
 
-         <div v-if="enrolled || isCourseOwner" class="col-md-4 video-container">
-            <h4>{{ videos.length > 0 ? 'Course Videos' : 'No Videos Yet' }}</h4>
-
-            <!-- <div :class="['video-tag', 'row',isVideoSelected(video)? 'video-tag-selected':'']" 
-                :key="video._id" v-for="(video, index) in videos" :video="video" >
-                <p @click="setVideoMode(video)" class="col-11 truncated-text">{{ `${index + 1}. ${video.title}` }}</p>
-                <div v-if="isCourseOwner" @click="deleteVideo(video)" class="delete-btn col-1">
-                    <i  class="far fa-trash-alt"></i>
-                </div>
-
-            </div> -->
-             <ListItem :key="video._id" v-for="(video, index) in videos" :name="video.title" :index="index+1"
-                                @handle_delete="deleteVideo(video)"
-                                @handle_click="setVideoMode(video)"
-                                :showDeleteButton="isCourseOwner"
-                                :showEditButton="isCourseOwner"
-                                :selected="isVideoSelected(video)"/>
-             <button v-if="isCourseOwner" class="btn btn-info col-12" @click="$router.push(`/video-editor/${course._id}`)">+ Add Video</button>
-        </div>
+        
       
     </div>
 </template>

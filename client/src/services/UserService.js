@@ -62,6 +62,7 @@ class UserService {
                     withCredentials: true,
                 })
 
+                console.log(res)
                 localStorage.setItem('auth', res.data)
                 resolve()
 
@@ -151,8 +152,6 @@ class UserService {
                 localStorage.setItem('auth', res.data)
                 resolve()
 
-
-
             } catch(err) {
                 reject(err.response.data.msg)
             }
@@ -201,14 +200,13 @@ class UserService {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.get(url + 'refresh_token',{
-                    withCredentials: true
+                    withCredentials: true,
                 })
                 localStorage.setItem('auth', res.data.accesstoken)
                 // console.log(res.data.accesstoken)
                 resolve(res.data.accesstoken)
 
             } catch(err) {
-                console.log(err.response)
                 reject(err.response.data.msg)
             }
         })
