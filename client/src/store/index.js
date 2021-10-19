@@ -1,7 +1,5 @@
 import {createStore} from 'vuex'
-import { createCategory, deleteCategory } from '../../../controllers/categoryCtrl'
 import CategoryService from '../services/CategoryService'
-import CourseService from '../services/CourseService'
 
 import UserService from '../services/UserService'
 import VideoService from '../services/VideoService'
@@ -15,7 +13,6 @@ const store = createStore({
   },
   mutations: {
     setUser(state, payload) {
-      // console.log(payload)
         state.user = payload
     },
     setUserCourseList(state, payload) {
@@ -31,7 +28,6 @@ const store = createStore({
       state.videos = []
     },
     setVideos(state, payload) {
-      console.log('setvid: ' + payload)
       state.videos = payload
     },
     setCourseList(state, payload) {
@@ -73,130 +69,50 @@ const store = createStore({
         }
        
       },
-      async updateCourseList(context, payload) {
-        await UserService.enroll(payload)
-        context.commit('setUserCourseList', payload)
+      async fetchVideos(context, payload) { //fetch videos for a given course id
+        try {
+          const videos = await VideoService.getVideosByCourseId(payload)
+          context.commit('setVideos', videos)
+
+        } catch(err) {
+          console.log(err)
+        }
+        
       },
-    //   async fetchCourses(context, payload) {  // get courses for given id list
-        
-    //     // for (let id of payload) {
+      async deleteVideo(context, payload) { // delete video of given video id
+        try {
+          await VideoService.deleteVideo(payload)
+          context.commit('removeVideo', payload)
+        } catch(err) {
           
-    //     //   const res = await fetch(`http://localhost:5000/api/courses/${id}`)
-    //     //   const data = await res.json()
-    //     //   if (res.status != 200) {
-    //     //       console.log(data.msg)
-    //     //       return
-    //     //   }
-    //     //   context.commit('insertCourse', data)
-    //     //   console.log(data)
-    //     // }
-    //     try {
-    //       const courses = await CourseService.getCoursesByIds(payload)
-    //       context.commit('setCourseList', courses)
-    //     } catch (err) {
-    //       context.commit('clearCourses')
-    //       console.log('reject')
-    //     }
-    // },
-    async fetchVideos(context, payload) { //fetch videos for a given course id
-      // const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
-      //   method: "GET",
-      //   mode: 'cors',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Authorization: context.getters.authToken
-      //   },
-      //   credentials: 'include',
-      // })
-      // if (res.status == 200) {
-      //   const data = await res.json()
-      //   console.log('data: ' + data)
-      //   context.commit('setVideos', data)
-      // } else {
-      //   throw 'could not load videos'
-      // }
-      try {
-        const videos = await VideoService.getVideosByCourseId(payload)
-        context.commit('setVideos', videos)
+        }
+      },
+      async fetchCategories(context) {  // fetch all categories 
+        try {
+          const categories = await CategoryService.getCategories()
+          context.commit('setCategories', categories)
 
-      } catch(err) {
-        console.log(err)
-      }
-      
-    },
-    // async deleteCourse(context, payload) {
-    //     const res = await fetch(`http://localhost:5000/api/courses/${payload}`, {
-    //       method: "DELETE",
-    //       mode: 'cors',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         Authorization: context.getters.authToken
-    //       },
-    //       credentials: 'include',
-    //     })
-    //     if (res.status == 200) {
-    //       const data = await res.json()
-    //       context.commit('removeCourse', payload)
-    //       console.log(data)
-    //     } else {
-    //       throw 'could not delete course'
-    //     }
-    // }, 
-    async deleteVideo(context, payload) { // delete video of given video id
-    //   const res = await fetch(`http://localhost:5000/api/videos/${payload}`, {
-    //     method: "DELETE",
-    //     mode: 'cors',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Authorization: context.getters.authToken
-    //     },
-    //     credentials: 'include',
-    //   })
-    //   if (res.status == 200) {
-    //     const data = await res.json()
-    //     context.commit('removeVideo', payload)
-    //     console.log(data)
-    //   } else {
-    //     throw 'could not delete video'
-    //   }
+        } catch(err) {
+          console.log(err)
+        }
+      },
+      async createCategory(context, payload) { // create category payload={name:...}
+        try {
+          await CategoryService.createCategory(payload.name)
+          context.dispatch('fetchCategories')
+        } catch(err) {
+          console.log(err)
+        }
+      },
+      async deleteCategory(context, payload) {  // delete given category payload=categoryobject
+        try {
+          await CategoryService.deleteCategory(payload)
+          context.dispatch('fetchCategories')
 
-      try {
-        await VideoService.deleteVideo(payload)
-        context.commit('removeVideo', payload)
-      } catch(err) {
-        
+        } catch(err) {
+          console.log(err)
+        }
       }
-    },
-    async fetchCategories(context) {
-      // if (context.state.categories.length > 0) {
-      //   return
-      // }
-
-      try {
-        const categories = await CategoryService.getCategories()
-        context.commit('setCategories', categories)
-
-      } catch(err) {
-        console.log(err)
-      }
-    },
-    async createCategory(context, payload) {
-      try {
-        await CategoryService.createCategory(payload.name)
-        context.dispatch('fetchCategories')
-      } catch(err) {
-        console.log(err)
-      }
-    },
-    async deleteCategory(context, payload) {
-      try {
-        await CategoryService.deleteCategory(payload)
-        context.dispatch('fetchCategories')
-
-      } catch(err) {
-        console.log(err)
-      }
-    }
 
   },
   getters: {

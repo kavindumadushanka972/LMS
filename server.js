@@ -12,6 +12,15 @@ const corsConfig = {
     credentials: true,
     origin: 'http://localhost:8081',
 };
+
+// production
+// if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('/public'))
+    app.get(/.*/, (req, res) => {
+        res.sendFile(__dirname + '/index.html')
+    })
+// }
+
 app.use(cors(corsConfig))
 app.use(fileUpload({
     useTempFiles: true

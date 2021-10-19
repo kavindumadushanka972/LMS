@@ -2,7 +2,7 @@
     <div class="dashboard">
         <div class="row" v-if="user">
             <div  class="col-lg-3 sidebar">
-                <img class="profile-pic" src="@/assets/default-profile-pic.png" alt="user.name">
+                <img class="profile-pic" src="@/assets/images/default-profile-pic.png" alt="user.name">
                 <h2>{{ 'Hi, ' + fname}}</h2>
                 <p>{{ user.email }}</p>
                 <h4>{{ roleStr }}</h4>               

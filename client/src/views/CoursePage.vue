@@ -38,7 +38,7 @@
                     <button class="btn btn-danger" @click="deleteCourse">Delete Course</button>
                 </div>
             </div>
-            <div v-else>
+            <div v-else class="option-container">
                 <button class="btn btn-primary" @click="$router.push('/login')">Login to Enroll</button>
             </div>
            

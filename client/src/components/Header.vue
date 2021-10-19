@@ -53,7 +53,6 @@ export default {
         ...mapActions(['loadUser', 'fetchCategories']) 
     },
     computed: {
-        // ...mapGetters(['authenticated']),
         ...mapState(['user', 'categories'])
     }
     

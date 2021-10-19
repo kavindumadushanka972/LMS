@@ -1,6 +1,6 @@
 <template>
     <div :class="['toast', hide? 'hidden':'']">
-        <p>{{ msg }}</p>
+        <p class="truncated-text">{{ msg }}</p>
     </div>
 </template>
 
@@ -44,6 +44,7 @@ export default {
     border-left: 4px solid red;
     text-align: left;
     transition: opacity 2s;
+    overflow: hidden;
 }
 p {
     color: white;

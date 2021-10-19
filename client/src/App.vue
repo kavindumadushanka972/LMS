@@ -3,11 +3,13 @@
     <Toast/>
     <Header/>
     <router-view/>
+    <Footer/>
   </div>
 </template>
 
 <script>
 import Header from './components/Header'
+import Footer from './components/Footer'
 import EventBus from './common/EventBus'
 import Toast from './components/Toast'
 import UserService from './services/UserService'
@@ -16,6 +18,7 @@ export default {
   name: "App",
   components: {
     Header,
+    Footer,
     Toast
   },
   async mounted() {
@@ -33,6 +36,9 @@ export default {
 </script>
 
 <style>
+body {
+  background-color: white;
+}
 #app {
   /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
@@ -40,6 +46,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   font-family: 'Montserrat', sans-serif;
+  min-height: 70vh;
 }
 
 h1, h2, h3, h4 {

@@ -8,6 +8,7 @@ import Dashboard from '../views/Dashboard'
 import CourseEditor from '../views/CourseEditor'
 import VideoEditor from '../views/VideoEditor'
 import About from '../views/About'
+import Contact from '../views/Contact'
 import store from '../store'
 
 
@@ -66,6 +67,11 @@ const routes = [
     path: '/video-editor/:courseid/:videoindex',
     name: 'VideoEditor',
     component: VideoEditor
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: Contact
   }
 ]
 
