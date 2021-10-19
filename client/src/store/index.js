@@ -1,4 +1,5 @@
 import {createStore} from 'vuex'
+import { createCategory, deleteCategory } from '../../../controllers/categoryCtrl'
 import CategoryService from '../services/CategoryService'
 import CourseService from '../services/CourseService'
 
@@ -167,13 +168,30 @@ const store = createStore({
       }
     },
     async fetchCategories(context) {
-      if (context.state.categories.length > 0) {
-        return
-      }
+      // if (context.state.categories.length > 0) {
+      //   return
+      // }
 
       try {
         const categories = await CategoryService.getCategories()
         context.commit('setCategories', categories)
+
+      } catch(err) {
+        console.log(err)
+      }
+    },
+    async createCategory(context, payload) {
+      try {
+        await CategoryService.createCategory(payload.name)
+        context.dispatch('fetchCategories')
+      } catch(err) {
+        console.log(err)
+      }
+    },
+    async deleteCategory(context, payload) {
+      try {
+        await CategoryService.deleteCategory(payload)
+        context.dispatch('fetchCategories')
 
       } catch(err) {
         console.log(err)

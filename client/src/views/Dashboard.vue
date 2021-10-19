@@ -31,12 +31,18 @@
                     <div class="col-md-6">
                         <h3>Categories</h3>
                        
-                            <ListItem :key="category._id" v-for="(category, index) in categories" :name="category.name" :index="index+1"
-                                @handle_delete="deleteCategory(category)"
-                                :showDeleteButton="true"
-                                :showEditButton="true"/>
-                        
-                        <button class="btn btn-info col-12">+ Add Cetegory</button>
+                        <ListItem :key="category._id" v-for="(category, index) in categories" :name="category.name" :index="index+1"
+                            @handle_delete="deleteCategory(category)"
+                            :showDeleteButton="true"
+                            :showEditButton="false"/>
+
+                        <div class="collapse" id="category-creator">
+                            <MiniForm :items="['name']" title="New Category" @on_submit="createCategory"/>
+                        </div>
+                        <button class="btn btn-info col-12" data-toggle="collapse" data-target="#category-creator"
+                            @click="showCategoryEditor = !showCategoryEditor">
+                                {{ showCategoryEditor? 'hide' : '+ Add Cetegory' }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -47,20 +53,23 @@
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import Course from '../components/Course'
+import ListItem from '../components/ListItem'
+import MiniForm from '../components/MiniForm'
+
 import CourseService from '../services/CourseService'
 import CategoryService from '../services/CategoryService'
-import ListItem from '../components/ListItem'
 import UserService from '../services/UserService'
 
 export default {
     name: 'Dashboard',
     components: {
         Course,
-        ListItem
+        ListItem,
+        MiniForm
     },
     data() {
         return {
-            // courses: []
+            showCategoryEditor: false
         }
     },
     async mounted() {
@@ -148,11 +157,15 @@ export default {
             }
 
         },
-        deleteCategory(category) {
-            console.log(category)
-        },
+        // createCategory(data) {
+        //     console.log(data.name)
+        //     // await CategoryService.createCategory(data.name)
+        // },
+        // deleteCategory(category) {
+        //     console.log(category)
+        // },
         ...mapMutations(['setCourseList', 'clearCourses', 'insertCourse']),
-        ...mapActions(['fetchCourses', 'fetchCategories'])
+        ...mapActions(['fetchCourses', 'fetchCategories', 'createCategory', 'deleteCategory'])
     }
 }
 </script>

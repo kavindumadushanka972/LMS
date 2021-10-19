@@ -28,6 +28,37 @@ class CategoryService {
             }
         })
     }
+
+    static createCategory(name) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await axios.post(url, {name}, {
+                    headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: localStorage.getItem('auth')
+                        },
+                })
+                resolve()
+            } catch(err) {
+                reject(err.response.data.msg)
+            }
+        })
+    }
+
+    static deleteCategory(category) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await axios.delete(url + category._id, {
+                    headers: {
+                            Authorization: localStorage.getItem('auth')
+                        },
+                })
+                resolve()
+            } catch(err) {
+                reject(err.response.data.msg)
+            }
+        })
+    }
 }
 
 export default CategoryService

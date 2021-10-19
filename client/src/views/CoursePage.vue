@@ -1,6 +1,6 @@
 <template>
     <div class="course-page row" v-if="course">
-        <div v-if="!videoMode" class="col-md-8">
+        <div v-if="!videoMode" class="col-md-8 align-self-center">
             <h1>{{ course.title }}</h1>
             <h5>by {{ course.owner_name }}</h5>
             <img class="main-img" :src="course.image_url" :alt="course.title"/>
@@ -15,8 +15,8 @@
                     </div>
                     <h4 v-else>Enrolled</h4>
                 </div>
-                <div v-else-if="isCourseOwner">
-                    <button class="btn btn-outline-dark" @click="$router.push(`/course-editor/${course._id}`)">Edit Course</button>            
+                <div v-else-if="isCourseOwner || user.role==3">
+                    <button v-if="isCourseOwner" class="btn btn-outline-dark" @click="$router.push(`/course-editor/${course._id}`)">Edit Course</button>            
                     <button class="btn btn-danger" @click="deleteCourse">Delete Course</button>
                 </div>
             </div>
@@ -25,7 +25,7 @@
             </div>
            
         </div>
-        <div v-else class="col-md-8">
+        <div v-else class="col-md-8 align-self-center">
             <button class="btn btn-dark btn-sm" @click="setCourseMode"><i class="fas fa-arrow-left"></i> Back to course home</button>
             <h1>{{ `${course.title}: ${currentVideo.title}` }}</h1>
             <Video :key="currentVideo._id" :video="currentVideo"/>
