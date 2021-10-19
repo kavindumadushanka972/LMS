@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import EventBus from '../common/EventBus'
 import Course from '../components/Course'
 import CourseSearch from '../components/CourseSearch'
 import CourseService from '../services/CourseService'
@@ -35,7 +36,6 @@ export default {
         }
     },
     async mounted() {
-
         if (this.$route.query.page) {
             this.page = parseInt(this.$route.query.page)
             
@@ -43,31 +43,24 @@ export default {
             this.page = 1
         }
         this.courses = await CourseService.getCoursesByQuery(this.$route.query)
-    //    console.log(localStorage.auth)
-
     },
     methods: {
-        // async fetchCourses(query) {
-        //     const res = await fetch(`http://localhost:5000/api/courses?` + new URLSearchParams(query))
-        //     console.log(`http://localhost:5000/api/courses?` + new URLSearchParams(query))
-        //     if (res.status != 200) {
-        //         return []
-        //     }
-        
-        //     const data = await res.json()
-        //     console.log(data.courses)
-
-        //     return data.courses
-        // },
         async nextPage() {
             this.page++
             this.$router.push({query: {page: this.page}})
-            this.courses = await CourseService.getCoursesByQuery({page: this.page})
+            await this.switchPage()
         },
         async prevPage() {
             this.page--
             this.$router.push({query: {page: this.page}})
-            this.courses = await CourseService.getCoursesByQuery({page: this.page})
+            this.switchPage()
+        },
+        async switchPage() {
+            try {
+                this.courses = await CourseService.getCoursesByQuery({page: this.page})
+            } catch(err) {
+                EventBus.trigger('toast', err)
+            }
         },
         async search(searchData) {
             const query = {
@@ -79,8 +72,7 @@ export default {
             }
             this.$router.push({query: query})
             this.courses = await CourseService.getCoursesByQuery(query)
-        }
-        
+        }      
     },
     computed: {
         showNextButton() {
@@ -113,8 +105,6 @@ h1 {
     display: inline;
     margin: 30px;
 }
-.category-select {
 
-}
 
 </style>

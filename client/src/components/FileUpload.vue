@@ -15,7 +15,7 @@ export default {
         return {
             uploading: 
         }
-    }
+    },
     methods: {
         async handleFileUpload(event) {
             try {

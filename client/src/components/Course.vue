@@ -40,7 +40,7 @@ export default {
                 await CourseService.deleteCourse(this.course._id)
                 this.$store.commit('removeCourse', this.course._id)
             } catch(err) {
-                // Toast
+                EventBus.trigger('toast', err)
             }
         }
     }
@@ -57,6 +57,8 @@ export default {
 .border {
     background-color: #e5e5e5;
     padding: 0;
+    border-radius: 10px;
+    overflow: hidden;
 }
 .details {
     padding: 10px 15px;

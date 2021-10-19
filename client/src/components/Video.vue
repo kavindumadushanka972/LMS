@@ -1,19 +1,5 @@
 <template>
     <div class="video col-12">
-        <!-- <div class="text">
-            <h3>{{ video.title }}</h3>
-        </div> -->
-        <!-- <iframe height="370" width="420" :src="video.link"></iframe> -->
-       <!-- <vue-plyr>
-            <div class="plyr__video-embed">
-                <iframe
-                :src="video.link"
-                allowfullscreen
-                allowtransparency
-                allow="autoplay"
-                ></iframe>
-            </div>
-        </vue-plyr> -->
         <vue-plyr>
         <video
             controls
@@ -22,14 +8,14 @@
             data-poster="poster.jpg"
         >
             <source
-            size="720"
-            :src="video.link"
-            type="video/mp4"
+                size="720"
+                :src="video.link"
+                type="video/mp4"
             />
             <source
-            size="1080"
-            :src="video.link"
-            type="video/mp4"
+                size="1080"
+                :src="video.link"
+                type="video/mp4"
             />
           
         </video>
@@ -45,7 +31,6 @@
 
 <script>
 import {mapActions} from 'vuex'
-// import VuePlyr from 'vue-plyr'
 
 export default {
     name: 'Video',
@@ -63,14 +48,12 @@ export default {
 }
 iframe {
     width: 100%;
-    /* height: 30rem; */
 }
 .text {
     text-align: left;
     /* width: 70%; */
     margin-right: 0;
     margin-top: 50px;
-    /* display: inline-block; */
 }
 .delete-button {
     float: left;

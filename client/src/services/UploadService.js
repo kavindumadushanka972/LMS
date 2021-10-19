@@ -26,6 +26,39 @@ class UploadSearvice {
         })
     }
 
+    static deleteImage(putlic_id) {
+        return new Promise(async (resolve, reject) => {
+            try {          
+                const res = await this.post(`${url}destroyimage`, {putlic_id}, {
+                    headers: {
+                        Authorization: localStorage.getItem('auth')
+                    }
+                })
+                console.log(res.data)
+                resolve()
+            } catch(err) {
+                reject(err)
+            }
+        })
+    }
+
+    static deleteVideo(putlic_id) {
+        return new Promise(async (resolve, reject) => {
+            try {          
+                const res = await this.post(`${url}destroyvideo`, {putlic_id}, {
+                    headers: {
+                        Authorization: localStorage.getItem('auth')
+                    }
+                })
+                console.log(res.data)
+                resolve()
+            } catch(err) {
+                reject(err)
+            }
+        })
+    }
+
+
     static uploadFile(file, uploadUrl) {
         return new Promise(async (resolve, reject) => {
             try {

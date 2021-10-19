@@ -207,7 +207,7 @@ class UserService {
                 resolve(res.data.accesstoken)
 
             } catch(err) {
-                reject(err.response.data.msg)
+                reject(err)
             }
         })
     }

@@ -30,7 +30,6 @@ export default {
 </script>
 
 <style scoped>
-
 form {
   width: 100%;
   padding: 0;
@@ -40,7 +39,6 @@ form {
   position: relative;
   top: 0;
 }
-
 .form-control {
     margin-bottom: 20px;
 }

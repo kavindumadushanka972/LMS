@@ -18,7 +18,7 @@ class CategoryService {
                 // const data = await res.json()
                 // if (res.status !== 200) {
                 //     reject(data.msg)
-                // }  
+                // } 
 
                 const res = await axios.get(url)
                 resolve(res.data)

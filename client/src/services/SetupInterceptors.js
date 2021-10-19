@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { reject } from 'bcrypt/promises'
 import UserService from './UserService'
+import EventBus from '../common/EventBus'
 
 class SetupInterceptors {
     static setup() {
@@ -10,12 +10,12 @@ class SetupInterceptors {
             }, 
             async (err) => {
                 const originalConfig = err.config
-                if (err.response && err.response.status === 400 && originalConfig.url !== '/api/user/refresh_token' ) {
+                if (err.response && err.response.status === 400 &&
+                     originalConfig.url !== '/api/user/refresh_token' && 
+                     originalConfig.url !== '/api/user/login' ) {
+
                     console.log('intercept erro ' + originalConfig.url + ' ' + err.response.status)
                 
-                    // const token = localStorage.getItem('auth')
-                    // originalConfig.headers.Authorization = token
-    
                     if (!originalConfig._retry) {
                         originalConfig._retry = true
                         try {
@@ -25,8 +25,8 @@ class SetupInterceptors {
     
                         } catch(err) {
                             console.log(err)
-                            await UserService.logout()
-                            return Promise.reject('refresh token expired/invalid. login required')
+                            EventBus.trigger('logout')
+                            return Promise.reject(err)
                         }
                        
                     } else {        

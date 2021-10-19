@@ -62,10 +62,14 @@ export default {
       //    this.incorrectPassword = true
       //   this.errorMsg = err
       // }
-
-      await UserService.login(this.email, this.password)
-      .then(() => this.$router.push('/dashboard'))
-      .catch((err) => this.errorMsg = err)
+      try {
+        await UserService.login(this.email, this.password)
+        this.$router.push('/dashboard')
+      } catch(err) {
+        console.log('login error')
+        this.errorMsg = err
+      }
+     
 
     }
   }

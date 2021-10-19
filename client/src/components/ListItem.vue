@@ -29,16 +29,16 @@ export default {
 .list-item {
     position: relative;
     border: 3px solid #e5e5e5;
+    border-radius: 7px;
     background-color: #e5e5e5;
     padding: 5px;
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     cursor: pointer;
-    /* height: 4rem; */
 }
 .list-item p {
     text-align: left;
-    padding: 0.6rem 5px;
+    padding: 0.4rem 5px;
     margin: 0;
 }
 .list-item:hover {

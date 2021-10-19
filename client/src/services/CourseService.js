@@ -1,4 +1,6 @@
 import axios from "axios"
+import UploadSearvice from "./UploadService"
+import UserService from "./UserService"
 
 const url = "/api/courses/"
 const url2 = "/api/mycourses/"
@@ -62,22 +64,6 @@ class CourseService {
     static deleteCourse(courseId) {
         return new Promise(async (resolve, reject) => {
             try {
-                // const res = await fetch(url + courseId, {
-                //     method: "DELETE",
-                //     mode: 'cors',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         Authorization:  localStorage.getItem('auth')
-                //     },
-                //     credentials: 'include',
-                // })
-                // const data = await res.json()
-
-                // if (res.status != 200) {
-                //     reject(data.msg)
-                // } 
-                // resolve()
-
                 await axios.delete(url + courseId, {
                     headers: {
                         'Content-Type': 'application/json',

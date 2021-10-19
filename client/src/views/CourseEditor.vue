@@ -1,4 +1,3 @@
-
 <template>
       <div class="course-editor row">
      <div class="container col-md-6" >
@@ -12,37 +11,30 @@
         <textarea type="text" class="form-control" rows="10" v-model="course.description" required></textarea>
       </div>
 
-        <div class="section">
-            <label for="image">Image</label>
-             <div class="custom-file">
-              <input type="file" class="custom-file-input" @change="handleFileUpload" id="customFile">
-              <label class="custom-file-label" for="customFile">Choose file</label>
-            </div>
-            <p v-if="uploading"> <b>uploading...</b></p>
-        </div>
+      <div class="section">
+          <label for="image">Image</label>
+            <div class="custom-file">
+            <input type="file" class="custom-file-input" @change="handleFileUpload" id="customFile">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+          </div>
+          <p v-if="uploading"> <b>uploading...</b></p>
+      </div>
 
-        <div class="image-section section">
-            <img :src="course.image_url"/>
-        </div>
+      <div class="image-section section">
+          <img :src="course.image_url"/>
+      </div>
 
-         <div class="form-group select-category section">
-          <label for="selecteCategory">Category</label>
-          <select v-model="course.category" class="form-control" aria-label="Seletect category">
-            <!-- <option selected value="maths">Math</option>
-            <option value="programming">Programming</option>
-            <option value="multimedia">Multimedia</option>
-            <option value="english">English</option>
-            <option value="other">Other</option> -->
-            <option :key="category._id" v-for="category in categories" :value="category.name">{{ category.name }}</option>
-          </select>
-        </div>
-               
+        <div class="form-group select-category section">
+        <label for="selecteCategory">Category</label>
+        <select v-model="course.category" class="form-control" aria-label="Seletect category">
+          <option :key="category._id" v-for="category in categories" :value="category.name">{{ category.name }}</option>
+        </select>
+      </div>
               
-
-        <div class="section">
-            <p v-if="errorMsg != ''">{{ errorMsg }}</p>
-            <button class="btn btn-lg btn-dark btn-block" type="submit">Save</button>
-        </div>
+      <div class="section">
+          <p v-if="errorMsg != ''">{{ errorMsg }}</p>
+          <button class="btn btn-lg btn-dark btn-block" type="submit">Save</button>
+      </div>
     </form>
      </div>
      </div>
@@ -50,6 +42,7 @@
 
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex'
+import EventBus from '../common/EventBus'
 import CourseService from '../services/CourseService'
 import UploadService from '../services/UploadService'
 
@@ -69,60 +62,26 @@ export default {
     }
   },
   async mounted() {
-    this.fetchCategories()
-    await this.loadUser()
-      if (this.authenticated && this.user.role === 2) {
-        if (this.$route.params.id) {
-            // await this.fetchCourses([this.$route.params.id])
-            const courses = await CourseService.getCoursesByIds([this.$route.params.id])
-            this.course = courses[0]
-        }
-      } else {
-          this.$router.push('/')
-      }  
+    const categoryP = this.fetchCategories()
+    const userP = this.loadUser()
+    await Promise.all([categoryP, userP])
+    
+    if (this.authenticated && this.user.role === 2) {
+      if (this.$route.params.id) {
+          const courses = await CourseService.getCoursesByIds([this.$route.params.id])
+          this.course = courses[0]
+      }
+    } else {
+        this.$router.push('/')
+    }  
   },
   methods: {
     async submit() {
-      // try {
-      //   let method = 'POST'
-      //   let url = 'http://localhost:5000/api/courses'
-      //   if (this.$route.params.id) {
-      //       method = 'PUT'
-      //       url += '/' + this.$route.params.id
-      //   }
-      //   const res = await fetch(url, {
-      //       method: method,
-      //       mode: 'cors',
-      //       headers: {
-      //           'Content-Type': 'application/json',
-      //           Authorization: this.$store.getters.authToken
-      //       },
-      //       credentials: 'include',
-      //       body: JSON.stringify({
-      //           ...this.course,
-      //           image_public_id: '0',
-                
-      //       })
-      //   })
-      //   const data = await res.json()
-      //   console.log(data)
-
-      //   if (res.status !== 200) {
-      //     this.errorMsg = data.msg
-      //     return
-      //   }
-      //   this.errorMsg = ''
-      //   this.$router.push('/')
-
-      // } catch(err) {
-      //   this.errorMsg = err
-      // }
       try {
         await CourseService.updateCourse(this.course, this.$route.params.id)
         this.$router.push('/dashboard')
       } catch(err) {
-        // Toast 
-        console.log(err)
+        this.errMsg = err
       }
     },
     async handleFileUpload(event) {
@@ -133,14 +92,11 @@ export default {
         this.course.image_url = data.url
         this.course.image_public_id = data.public_id
         this.uploading = false
-
-
       } catch(err) {
         this.uploading = true
         this.errorMsg = err
       }
     },
-  
     ...mapActions(['loadUser', 'fetchCategories'])
   },
   computed: {
