@@ -13,18 +13,13 @@ const corsConfig = {
     origin: 'http://localhost:8081',
 };
 
-// production
-// if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('/public'))
-    app.get(/.*/, (req, res) => {
-        res.sendFile(__dirname + '/index.html')
-    })
-// }
 
 app.use(cors(corsConfig))
 app.use(fileUpload({
     useTempFiles: true
 }))
+
+
 
 // Routes
 app.use('/api/user', require('./routes/userRouter'))
@@ -32,6 +27,16 @@ app.use('/api', require('./routes/categoryRouter'))
 app.use('/api', require('./routes/uploads'))
 app.use('/api', require('./routes/courseRouter'))
 app.use('/api', require('./routes/videoRouter'))
+
+// production
+// if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(__dirname + '/public'))
+    app.get(/.*/, (req, res) => {
+        res.sendFile(__dirname + '/public/index.html')
+    })
+// }
+
+
 
 // Connect to mongodb
 const URI = process.env.MONGODB_URL

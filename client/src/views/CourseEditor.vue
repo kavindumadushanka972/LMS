@@ -117,6 +117,7 @@ export default {
   background-color: #A0E7E5;
   position: relative;
   top: 0;
+  padding-bottom: 50px;
 }
 .section {
     margin-top: 40px;
@@ -133,6 +134,7 @@ img {
   padding: 40px 20px;
   border: 1px solid  #e6e3e3;
   background-color: white;
+  border-radius: 10px;
 }
 .row {
     text-align: left;

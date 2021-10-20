@@ -84,7 +84,7 @@ export default {
   background-color: #A0E7E5;
   position: relative;
   top: 0;
-
+  padding-bottom: 50px;
 }
 .container {
   align-items: center;
