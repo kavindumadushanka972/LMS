@@ -144,8 +144,6 @@ img {
   background-color: white;
   border-radius: 10px;
 }
-
-
 .row {
     text-align: left;
 }

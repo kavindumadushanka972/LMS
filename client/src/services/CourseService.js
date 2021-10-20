@@ -124,7 +124,6 @@ class CourseService {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.get(url, {params: query})
-                console.log(res)
                 resolve(res.data.courses)
 
             } catch(err) {

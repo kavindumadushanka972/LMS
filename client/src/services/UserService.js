@@ -41,7 +41,6 @@ class UserService {
                     withCredentials: true,
                 })
 
-                console.log(res)
                 localStorage.setItem('auth', res.data)
                 resolve()
 

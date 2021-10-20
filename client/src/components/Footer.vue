@@ -1,7 +1,7 @@
 <template>
     <footer>
         <router-link to="/about">About</router-link>
-        <router-link to="/home">Home</router-link>
+        <router-link to="/">Home</router-link>
 
         <router-link to="/contact">Contact</router-link>
       
@@ -29,9 +29,6 @@ footer {
 a {
     margin-left: 1rem;
     margin-right: 1rem;
-}
-a:hover {
-    /* text-decoration: underline; */
 }
 .copyright {
     color: gray;

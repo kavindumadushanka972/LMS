@@ -74,6 +74,7 @@ export default {
         }
     },
     async mounted() {
+        EventBus.trigger('startLoading')
         await this.$store.dispatch('loadUser')
         if (!this.user) {
             this.$router.push('/')
@@ -81,6 +82,7 @@ export default {
         await this.fetchUserCourses()
 
         await this.fetchCategories()
+        EventBus.trigger('endLoading')
     },
     computed: {
         fname() {   // first name

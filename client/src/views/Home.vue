@@ -111,6 +111,7 @@ import Course from '../components/Course'
 import {mapState, mapGetters} from 'vuex'
 import CourseService from '../services/CourseService'
 import UserService from '../services/UserService'
+import EventBus from '../common/EventBus'
 
 export default {
   name: 'Home',
@@ -124,8 +125,10 @@ export default {
     }
   },
   async created() {
+    EventBus.trigger('startLoading')
     await this.$store.dispatch('loadUser')
     this.featuredCourses = await this.fetchFeaturedCourses()
+    EventBus.trigger('endLoading')
   },
   methods: {
         async fetchFeaturedCourses() {

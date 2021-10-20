@@ -2,7 +2,8 @@
   <div>
     <Toast/>
     <Header/>
-    <router-view/>
+    <Loading v-if="loading"/>
+    <router-view :class="loading ? 'hidden':''"/>
     <Footer/>
   </div>
 </template>
@@ -13,13 +14,20 @@ import Footer from './components/Footer'
 import EventBus from './common/EventBus'
 import Toast from './components/Toast'
 import UserService from './services/UserService'
+import Loading from './components/Loading'
 
 export default {
   name: "App",
   components: {
     Header,
     Footer,
-    Toast
+    Toast,
+    Loading
+  },
+  data() {
+    return {
+      loading: false
+    }
   },
   async mounted() {
     EventBus.on('logout', async (data) => {
@@ -31,6 +39,10 @@ export default {
         EventBus.trigger('toast', err)
       }
     })
+
+    EventBus.on('startLoading', () => this.loading = true)
+    EventBus.on('endLoading', () => this.loading = false)
+
   }
 }
 </script>
@@ -55,7 +67,6 @@ h1, h2, h3, h4 {
 p {
   font-size: 1rem;
 }
-
 .ilearn-l {
   color:blueviolet;
 }
@@ -66,5 +77,8 @@ a:hover {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.hidden {
+  visibility: hidden;
 }
 </style>

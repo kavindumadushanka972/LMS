@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import EventBus from '../common/EventBus'
 import UserService from '../services/UserService'
 
 export default {
@@ -38,7 +39,7 @@ export default {
         await UserService.login(this.email, this.password)
         this.$router.push('/dashboard')
       } catch(err) {
-        console.log('login error')
+        EventBus.trigger('toast', 'login error')
         this.errorMsg = err
       }    
     }
@@ -56,6 +57,7 @@ export default {
   background-color: #A0E7E5;
   position: relative;
   top: 0;
+  min-height: 80vh;
 }
 .container {
   align-items: center;

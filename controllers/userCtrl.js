@@ -112,10 +112,11 @@ const userCtrl = {
             const user = await Users.findById(req.user.id)
             if(!user) return res.status(500).json({msg: "User does not exists."})
 
+            // only get the new course 
             await Users.updateOne({_id: req.user.id}, {$push: {courses: req.body.course}})
             
-            console.log('enrolled ' + req.body.course)
-            console.log(await Course.updateOne({_id: req.body.course}, {$inc: {enrolled_number: 1}}))
+            // increase the enrolled number
+            await Course.updateOne({_id: req.body.course}, {$inc: {enrolled_number: 1}})
 
             res.json({msg: "Enrolled"})
         } catch (err) {
