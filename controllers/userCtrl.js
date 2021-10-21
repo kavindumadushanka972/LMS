@@ -1,4 +1,5 @@
 const Users  = require('../models/userModel')
+const Course = require('../models/courseModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -34,7 +35,7 @@ const userCtrl = {
             // save a cookie in this particular path
             res.cookie('refreshtoken', refreshtoken, {
                 httpOnly: true,
-                path: '/user/refresh_token'
+                path: '/api/user/refresh_token'
             })
 
             // send access token
@@ -60,7 +61,7 @@ const userCtrl = {
             // save a cookie in this particular path
             res.cookie('refreshtoken', refreshtoken, {
                 httpOnly: true,
-                path: '/user/refresh_token'
+                path: '/api/user/refresh_token'
             })
 
             // send access token
@@ -72,7 +73,7 @@ const userCtrl = {
     },
     logout: async (req, res) => {
         try {
-            res.clearCookie('refreshtoken', {path: '/user/refresh_token'})
+            res.clearCookie('refreshtoken', {path: '/api/user/refresh_token'})
             return res.json({msg: "Logged Out"})
         } catch (err) {
             return res.status(500).json({msg: err.message})
@@ -82,7 +83,7 @@ const userCtrl = {
         try {
             // check cookie from '/user/refresh_token' path 
             const rf_token = req.cookies.refreshtoken;
-            if(!rf_token) return res.status(400).json({msg: "Please Login or Register."})
+            if(!rf_token) return res.status(400).json({msg: "Please Login or Register. no refresh token"})
 
             jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
                 if(err) return res.status(400).json({msg: "Please Login or Register."})
@@ -111,9 +112,11 @@ const userCtrl = {
             const user = await Users.findById(req.user.id)
             if(!user) return res.status(500).json({msg: "User does not exists."})
 
-            await Users.findByIdAndUpdate({_id: req.user.id}, {
-                courses: req.body.course
-            })
+            // only get the new course 
+            await Users.updateOne({_id: req.user.id}, {$push: {courses: req.body.course}})
+            
+            // increase the enrolled number
+            await Course.updateOne({_id: req.body.course}, {$inc: {enrolled_number: 1}})
 
             res.json({msg: "Enrolled"})
         } catch (err) {
