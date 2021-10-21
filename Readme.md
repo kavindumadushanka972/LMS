@@ -35,14 +35,14 @@ npm run build
 
 ### Screens
 
-https://github.com/kavindumadushanka972/LMS/blob/master/images/1.PNG
+<img src="images/1.PNG">
 
-https://github.com/kavindumadushanka972/LMS/blob/master/images/2.PNG
+<img src="images/2.PNG">
 
-https://github.com/kavindumadushanka972/LMS/blob/master/images/3.PNG
+<img src="images/3.PNG">
 
-https://github.com/kavindumadushanka972/LMS/blob/master/images/4.PNG
+<img src="images/4.PNG">
 
-https://github.com/kavindumadushanka972/LMS/blob/master/images/5.PNG
+<img src="images/5.PNG">
 
-https://github.com/kavindumadushanka972/LMS/blob/master/images/6.PNG
+<img src="images/6.PNG">
