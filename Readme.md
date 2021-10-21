@@ -1,6 +1,6 @@
 # Online Learning & Teaching Platform
 
-See Live[Click Here](https://project-ilearn.herokuapp.com)
+See Live [Click Here](https://project-ilearn.herokuapp.com)
 
 ## Project Setup
 
@@ -33,5 +33,16 @@ npm run serve
 npm run build
 ```
 
-/images/1.png
+### Screens
 
+https://github.com/kavindumadushanka972/LMS/blob/master/images/1.PNG
+
+https://github.com/kavindumadushanka972/LMS/blob/master/images/2.PNG
+
+https://github.com/kavindumadushanka972/LMS/blob/master/images/3.PNG
+
+https://github.com/kavindumadushanka972/LMS/blob/master/images/4.PNG
+
+https://github.com/kavindumadushanka972/LMS/blob/master/images/5.PNG
+
+https://github.com/kavindumadushanka972/LMS/blob/master/images/6.PNG
